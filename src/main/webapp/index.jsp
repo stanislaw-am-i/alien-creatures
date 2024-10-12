@@ -5,12 +5,19 @@
     <title>JSP - Hello World</title>
 </head>
 <body>
-<h1>"Hello World!"
-</h1>
+<h1>"Hello World!"</h1>
 <br/>
-<form name="send" action="hello-servlet" method="get">
-    <input type="text" name="number" value=""/>
-    <input type="submit" name="submit" value="Send"/>
-</form>
+<div>
+    <div>
+        <form name="send" action="controller" method="get">
+            <input type="text" name="number" value=""/>
+            <input type="submit" name="submit" value="Send"/>
+        </form>
+    </div>
+    <div>
+        <a href="jsp/login.jsp">Login</a>
+    </div>
+</div>
+
 </body>
 </html>
