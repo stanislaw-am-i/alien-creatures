@@ -10,7 +10,7 @@ public class LoginCommand implements Command {
     public String execute(HttpServletRequest request) {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
-        UserService userService = new UserServiceImpl(); // todo
+        UserService userService = new UserServiceImpl();
         String page;
         if (userService.authenticate(login, password)) {
             request.setAttribute("user", login);

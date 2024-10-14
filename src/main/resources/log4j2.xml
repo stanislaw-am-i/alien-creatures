@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status = "WARN">
     <Properties>
-        <property name="pattern_file">
+        <property name="main_pattern">
             %d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{5}- %msg%n
         </property>
         <property name="log_dir">${sys:catalina.home}/logs</property>
@@ -9,10 +9,10 @@
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="${pattern_file}"/>
+            <PatternLayout pattern="${main_pattern}"/>
         </Console>
         <File name="TxtFile" fileName="${log_dir}/alienCreatures-${current_date}.log" bufferedIO="true">
-            <PatternLayout pattern="${pattern_file}"/>
+            <PatternLayout pattern="${main_pattern}"/>
         </File>
     </Appenders>
     <Loggers>
