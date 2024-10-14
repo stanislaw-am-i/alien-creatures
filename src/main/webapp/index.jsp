@@ -2,20 +2,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>Alien Creatures</title>
 </head>
 <body>
-<h1>"Hello World!"</h1>
-<br/>
 <div>
     <div>
         <form name="send" action="controller" method="get">
+            <input type="hidden" name="command" value="MULTIPLY_BY_TWO"/>
+            Multiply any number by 2:<br/>
             <input type="text" name="number" value=""/>
             <input type="submit" name="submit" value="Send"/>
         </form>
     </div>
+    <br/>
     <div>
-        <a href="jsp/login.jsp">Login</a>
+        <a href="jsp/login.jsp">Go to the Login Page</a>
     </div>
 </div>
 

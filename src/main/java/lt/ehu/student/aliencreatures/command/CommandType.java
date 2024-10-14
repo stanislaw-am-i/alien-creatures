@@ -1,12 +1,12 @@
 package lt.ehu.student.aliencreatures.command;
 
-import lt.ehu.student.aliencreatures.command.impl.DefaultCommand;
-import lt.ehu.student.aliencreatures.command.impl.LogOutCommand;
-import lt.ehu.student.aliencreatures.command.impl.LoginCommand;
+import lt.ehu.student.aliencreatures.command.impl.*;
 
 public enum CommandType {
     LOGIN(new LoginCommand()),
     LOGOUT(new LogOutCommand()),
+    ADD_ALIEN(new AddAlienCommand()),
+    MULTIPLY_BY_TWO(new MultiplyBy2Command()),
     DEFAULT(new DefaultCommand());
 
     private Command command;
@@ -20,7 +20,7 @@ public enum CommandType {
     }
 
     public static Command defineCommand(String commandStr) {
-        // todo via stream and add exception handler
+        // todo: via stream and add exception handler probably
         return CommandType.valueOf(commandStr.toUpperCase()).getCommand();
     }
 }

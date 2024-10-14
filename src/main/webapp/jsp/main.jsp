@@ -4,11 +4,11 @@
     <title>Main</title>
 </head>
 <body>
-<!--
-$/{first}
--->
-hello = ${user}
-<a href="controller?command=logout">Logout</a>
-<br/>
+    Hello, ${user}!
+    <br/>
+    <a href="jsp/aliens.jsp">Go to The Character's Page</a>
+    <br/>
+    <a href="controller?command=logout">Logout</a>
+    <br/>
 </body>
 </html>

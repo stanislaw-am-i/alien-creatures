@@ -11,10 +11,8 @@
         Password:<br/>
         <input type="password" name="password" value=""/><br/>
         ${errorLoginPassMessage} <br/>
-        ${wrongAction} <br/>
-        ${nullPage} <br/>
         <input type="submit" value="Login"/>
-        </form>
+    </form>
     <hr/>
 </body>
 </html>

@@ -7,40 +7,42 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import lt.ehu.student.aliencreatures.command.Command;
 import lt.ehu.student.aliencreatures.command.CommandType;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@WebServlet(name = "helloServlet", value = "/controller")
+@WebServlet(name = "alienCreaturesServlet", value = {"/controller", "*.do"})
 public class Controller extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
 
     public void init() {
-        LOGGER.info("The Alien Creatures Servlet has started.");
+        LOGGER.info("Servlet Initialized.");
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.setContentType("text/html");
-        String numStr = request.getParameter("number");
-        int num = Integer.parseInt(numStr);
-        num *= 2;
-        request.setAttribute("first", num);
-        request.getRequestDispatcher("/jsp/main.jsp").forward(request, response);
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.info("Received Get Request.");
+        processRequest(req, resp);
+        LOGGER.info("Get Request has been processed.");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LOGGER.info("Received Post Request.");
         processRequest(req, resp);
+        LOGGER.info("Post Request has been processed.");
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LOGGER.debug(36);
         resp.setContentType("text/html");
         String commandStr = req.getParameter("command");
+        LOGGER.info("The Command {} is processed.", commandStr);
         Command command = CommandType.defineCommand(commandStr);
         String page = command.execute(req);
-        LOGGER.debug(page);
         req.getRequestDispatcher(page).forward(req, resp);
     }
 
-    public void destroy() {}
+    public void destroy() {
+        LOGGER.info("Servlet Destroyed.");
+    }
 }
