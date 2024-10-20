@@ -1,7 +1,6 @@
 package lt.ehu.student.aliencreatures.util;
 
-import lt.ehu.student.aliencreatures.controller.Controller;
-import lt.ehu.student.aliencreatures.dao.connection.ConnectionCreator;
+import lt.ehu.student.aliencreatures.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +22,7 @@ public class EncryptionUtil {
         // todo: salt must be unique for each user and stored in postgres.
         try {
             Properties prop = new Properties();
-            prop.load(EncryptionUtil.class.getClassLoader().getResourceAsStream(ConnectionCreator.PROPERTIES));
+            prop.load(EncryptionUtil.class.getClassLoader().getResourceAsStream(ConnectionPool.PROPERTIES));
             final String salt = (String) prop.get("db.salt");
 
             PBEKeySpec keySpec = new PBEKeySpec(value.toCharArray(), salt.getBytes(), ITERATIONS_TO_HASH, KEY_LENGTH_OF_HASH);

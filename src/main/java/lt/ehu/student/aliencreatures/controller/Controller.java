@@ -7,7 +7,8 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import lt.ehu.student.aliencreatures.command.Command;
 import lt.ehu.student.aliencreatures.command.CommandType;
-import org.apache.logging.log4j.Level;
+import lt.ehu.student.aliencreatures.exception.CommandException;
+import lt.ehu.student.aliencreatures.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,11 +39,17 @@ public class Controller extends HttpServlet {
         String commandStr = req.getParameter("command");
         LOGGER.info("The Command {} is processed.", commandStr);
         Command command = CommandType.defineCommand(commandStr);
-        String page = command.execute(req);
-        req.getRequestDispatcher(page).forward(req, resp);
+        try {
+            String page = command.execute(req);
+            req.getRequestDispatcher(page).forward(req, resp);
+        } catch (CommandException e) {
+            req.setAttribute("error_msg", e.getCause());
+            req.getRequestDispatcher("jsp/error/error_500.jsp").forward(req, resp);
+        }
     }
 
     public void destroy() {
+        ConnectionPool.getInstance().destroyPool();
         LOGGER.info("Servlet Destroyed.");
     }
 }

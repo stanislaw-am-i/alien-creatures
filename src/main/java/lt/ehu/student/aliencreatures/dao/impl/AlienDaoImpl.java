@@ -1,10 +1,9 @@
 package lt.ehu.student.aliencreatures.dao.impl;
 
-import lt.ehu.student.aliencreatures.controller.Controller;
 import lt.ehu.student.aliencreatures.dao.BaseDao;
 import lt.ehu.student.aliencreatures.dao.AlienDao;
-import lt.ehu.student.aliencreatures.dao.connection.ConnectionCreator;
 import lt.ehu.student.aliencreatures.entity.Alien;
+import lt.ehu.student.aliencreatures.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,21 +26,18 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
 
     @Override
     public boolean insert(Alien alien) {
-        boolean result;
         try {
-            Connection connection = ConnectionCreator.getInstance().createConnection();
+            Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(ADD_CHARACTER_QUERY);
             statement.setString(1, alien.getName());
             statement.setString(2, alien.getLor());
             int rowsAffected = statement.executeUpdate();
-            ConnectionCreator.getInstance().closeConnection(connection);
-            result = rowsAffected == 1;
+            ConnectionPool.getInstance().releaseConnection(connection);
+            return rowsAffected == 1;
         } catch (SQLException e) {
             LOGGER.error("Failed to insert alien.", e);
             throw new RuntimeException(e);
         }
-
-        return result;
     }
 
     @Override
@@ -53,7 +49,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
     public List<Alien> findAll() {
         List<Alien> aliens = new ArrayList<>();
         try {
-            Connection connection = ConnectionCreator.getInstance().createConnection();
+            Connection connection = ConnectionPool.getInstance().getConnection();
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(FIND_ALL_QUERY);
 
@@ -66,7 +62,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
                 aliens.add(alien);
             }
 
-            ConnectionCreator.getInstance().closeConnection(connection);
+            ConnectionPool.getInstance().releaseConnection(connection);
         } catch (SQLException e) {
             LOGGER.error("Failed to fetch the list of aliens records.", e);
             throw new RuntimeException(e);
@@ -83,13 +79,13 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
     @Override
     public boolean checkDuplicate(Alien alien) {
         try {
-            Connection connection = ConnectionCreator.getInstance().createConnection();
+            Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(CHECK_DUPLICATE_QUERY);
             statement.setString(1, alien.getName());
             statement.setString(2, alien.getLor());
             ResultSet result = statement.executeQuery();
 
-            ConnectionCreator.getInstance().closeConnection(connection);
+            ConnectionPool.getInstance().releaseConnection(connection);
             return result.next() && result.getInt(1) > 0;
         } catch (SQLException e) {
             LOGGER.error("Failed to select a record from DB.", e);

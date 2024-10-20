@@ -6,7 +6,7 @@ public enum CommandType {
     LOGIN(new LoginCommand()),
     LOGOUT(new LogOutCommand()),
     ADD_ALIEN(new AddAlienCommand()),
-    MULTIPLY_BY_TWO(new MultiplyBy2Command()),
+    SIGN_UP(new SignUpCommand()),
     DEFAULT(new DefaultCommand());
 
     private Command command;
