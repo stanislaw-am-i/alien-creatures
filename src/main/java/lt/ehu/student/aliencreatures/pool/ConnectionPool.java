@@ -62,7 +62,7 @@ public class ConnectionPool {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } finally {
-                INSTANCE_LOCK.lock();
+                INSTANCE_LOCK.unlock();
             }
         }
         return instance;

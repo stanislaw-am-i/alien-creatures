@@ -5,14 +5,23 @@ import lt.ehu.student.aliencreatures.dao.impl.UserDaoImpl;
 import lt.ehu.student.aliencreatures.entity.User;
 import lt.ehu.student.aliencreatures.exception.DaoException;
 import lt.ehu.student.aliencreatures.exception.ServiceException;
+import lt.ehu.student.aliencreatures.mail.EmailContent;
+import lt.ehu.student.aliencreatures.mail.EmailContentFactory;
+import lt.ehu.student.aliencreatures.mail.EmailSender;
+import lt.ehu.student.aliencreatures.mail.EmailType;
+import lt.ehu.student.aliencreatures.pool.ConnectionPool;
 import lt.ehu.student.aliencreatures.service.UserService;
 import lt.ehu.student.aliencreatures.util.EncryptionUtil;
 
+import java.io.IOException;
 import java.util.Optional;
+import java.util.Properties;
 
 public class UserServiceImpl implements UserService {
     private static final UserServiceImpl instance = new UserServiceImpl();
     private final UserDao userDao = UserDaoImpl.getInstance();
+
+    public static final String MAIL_PROPERTIES = "properties/mail.properties";
 
     private UserServiceImpl() {}
 
@@ -53,4 +62,20 @@ public class UserServiceImpl implements UserService {
 
         return UserDaoImpl.getInstance().insert(user);
     }
+
+    @Override
+    public boolean sendEmailToVerifyUser(String username, String email, String url) throws ServiceException {
+        try {
+            Properties prop = new Properties();
+            prop.load(EncryptionUtil.class.getClassLoader().getResourceAsStream(MAIL_PROPERTIES));
+
+            EmailContent confirmationEmail = EmailContentFactory.createEmailContent(EmailType.REGISTRATION_CONFIRMATION, username, url);
+            EmailSender emailSender = new EmailSender(email, confirmationEmail, prop);
+            emailSender.send();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
 }

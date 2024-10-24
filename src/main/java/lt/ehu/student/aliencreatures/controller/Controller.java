@@ -41,7 +41,8 @@ public class Controller extends HttpServlet {
         Command command = CommandType.defineCommand(commandStr);
         try {
             String page = command.execute(req);
-            req.getRequestDispatcher(page).forward(req, resp);
+            //req.getRequestDispatcher(page).forward(req, resp);
+            resp.sendRedirect(page);
         } catch (CommandException e) {
             req.setAttribute("error_msg", e.getCause());
             req.getRequestDispatcher("jsp/error/error_500.jsp").forward(req, resp);

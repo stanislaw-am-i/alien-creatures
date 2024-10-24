@@ -55,7 +55,7 @@
 
             </form>
             <hr/>
-            <p>Don't have an account? <a href="${pageContext.request.contextPath}/jsp/register.jsp">Register here</a>.</p>
+            <p>Don't have an account? <a href="${pageContext.request.contextPath}/jsp/signup.jsp">Register here</a>.</p>
         </div>
     </div>
 </main>

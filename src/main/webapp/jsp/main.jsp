@@ -5,6 +5,8 @@
 </head>
 <body>
     Hello, ${user}!
+    Session for ${user_name}
+    Current page: ${current_page}
     <br/>
     <a href="jsp/aliens.jsp">Go to The Character's Page</a>
     <br/>
