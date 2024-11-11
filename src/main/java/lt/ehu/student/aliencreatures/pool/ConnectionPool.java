@@ -1,5 +1,6 @@
 package lt.ehu.student.aliencreatures.pool;
 
+import lt.ehu.student.aliencreatures.util.PropertyUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,6 +19,10 @@ public class ConnectionPool {
     private static final int DEFAULT_POOL_SIZE = 8;
     private static final ReentrantLock INSTANCE_LOCK = new ReentrantLock();
     public static final String PROPERTIES = "properties/database.properties";
+    private static final String DB_URL_PROPERTY_NAME = "db.url";
+    private static final String DB_USER_PROPERTY_NAME = "db.user";
+    private static final String DB_PASSWORD_PROPERTY_NAME = "db.password";
+    // todo: AtomicBoolean
 
     private BlockingQueue<ProxyConnection> free = new LinkedBlockingQueue<>(DEFAULT_POOL_SIZE);
     private BlockingQueue<ProxyConnection> used = new LinkedBlockingQueue<>(DEFAULT_POOL_SIZE);
@@ -34,12 +39,11 @@ public class ConnectionPool {
     private ConnectionPool() throws SQLException, IOException {
         DriverManager.registerDriver(new org.postgresql.Driver());
 
-        Properties prop = new Properties();
-        prop.load(ConnectionPool.class.getClassLoader().getResourceAsStream(PROPERTIES));
+        Properties prop = PropertyUtil.loadProperties(PROPERTIES);
 
-        String url = (String) prop.get("db.url");
-        String user = prop.getProperty("db.user");
-        String password = prop.getProperty("db.password");
+        String url = (String) prop.get(DB_URL_PROPERTY_NAME);
+        String user = prop.getProperty(DB_USER_PROPERTY_NAME);
+        String password = prop.getProperty(DB_PASSWORD_PROPERTY_NAME);
 
         // todo: As Stream
         for (int i = 0; i < 8; i++) {

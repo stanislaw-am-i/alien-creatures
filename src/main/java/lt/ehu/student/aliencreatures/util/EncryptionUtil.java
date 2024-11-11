@@ -21,8 +21,7 @@ public class EncryptionUtil {
     public static String doHashingWithSalt(String value)  {
         // todo: salt must be unique for each user and stored in postgres.
         try {
-            Properties prop = new Properties();
-            prop.load(EncryptionUtil.class.getClassLoader().getResourceAsStream(ConnectionPool.PROPERTIES));
+            Properties prop = PropertyUtil.loadProperties(ConnectionPool.PROPERTIES);
             final String salt = (String) prop.get("db.salt");
 
             PBEKeySpec keySpec = new PBEKeySpec(value.toCharArray(), salt.getBytes(), ITERATIONS_TO_HASH, KEY_LENGTH_OF_HASH);

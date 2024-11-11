@@ -5,6 +5,8 @@ public class User extends AbstractEntity {
     private String email;
     private String role;
     private String password;
+    private Boolean isActive;
+    private String confirmationCode;
 
     public String getPassword() {
         return password;
@@ -37,4 +39,21 @@ public class User extends AbstractEntity {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public String getConfirmationCode() {
+        return confirmationCode;
+    }
+
+    public void setConfirmationCode(String confirmationCode) {
+        this.confirmationCode = confirmationCode;
+    }
+
 }

@@ -3,6 +3,7 @@ package lt.ehu.student.aliencreatures.dao.impl;
 import lt.ehu.student.aliencreatures.dao.BaseDao;
 import lt.ehu.student.aliencreatures.dao.AlienDao;
 import lt.ehu.student.aliencreatures.entity.Alien;
+import lt.ehu.student.aliencreatures.exception.DaoException;
 import lt.ehu.student.aliencreatures.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +26,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
     }
 
     @Override
-    public boolean insert(Alien alien) {
+    public boolean insert(Alien alien) throws DaoException {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(ADD_CHARACTER_QUERY);
@@ -36,7 +37,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
             return rowsAffected == 1;
         } catch (SQLException e) {
             LOGGER.error("Failed to insert alien.", e);
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
@@ -46,7 +47,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
     }
 
     @Override
-    public List<Alien> findAll() {
+    public List<Alien> findAll() throws DaoException {
         List<Alien> aliens = new ArrayList<>();
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
@@ -63,12 +64,11 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
             }
 
             ConnectionPool.getInstance().releaseConnection(connection);
+            return aliens;
         } catch (SQLException e) {
             LOGGER.error("Failed to fetch the list of aliens records.", e);
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
-
-        return aliens;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
     }
 
     @Override
-    public boolean checkDuplicate(Alien alien) {
+    public boolean checkDuplicate(Alien alien) throws DaoException {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(CHECK_DUPLICATE_QUERY);
@@ -89,7 +89,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
             return result.next() && result.getInt(1) > 0;
         } catch (SQLException e) {
             LOGGER.error("Failed to select a record from DB.", e);
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 }

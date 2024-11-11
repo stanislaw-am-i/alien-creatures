@@ -17,7 +17,13 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final String AUTH_QUERY = "SELECT password FROM users WHERE username = ?";
     private static final String FIND_BY_LOGIN_QUERY = "SELECT id, username, email FROM users WHERE username = ? LIMIT 1";
     private static final String FIND_BY_EMAIL_QUERY = "SELECT id, username, email FROM users WHERE email = ? LIMIT 1";
-    private static final String INSERT_USER_QUERY = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+    private static final String FIND_BY_CONFIRMATION_CODE_QUERY = "SELECT id, username, email FROM users WHERE confirmation_code = ? LIMIT 1";
+    private static final String INSERT_USER_QUERY = "INSERT INTO users (username, email, password, confirmation_code) VALUES (?, ?, ?, ?)";
+    private static final String UPDATE_USER_QUERY = "UPDATE users set email = ?, username = ?, is_active = ? WHERE id = ?";
+
+    private static final String USER_ID_FIELD = "id";
+    private static final String USER_EMAIL_FIELD = "email";
+    private static final String USER_USERNAME_FIELD = "username";
 
     private static UserDaoImpl instance = new UserDaoImpl();
 
@@ -47,51 +53,43 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public Optional<User> findByUsername(String login) {
+    public Optional<User> findByUsername(String username) throws DaoException {
+        return findByField(FIND_BY_LOGIN_QUERY, username);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) throws DaoException {
+        return findByField(FIND_BY_EMAIL_QUERY, email);
+    }
+
+    @Override
+    public Optional<User> findByConformationCode(String code) throws DaoException {
+        return findByField(FIND_BY_CONFIRMATION_CODE_QUERY, code);
+    }
+
+    private Optional<User> findByField(String query, String param) throws DaoException {
         try {
             Optional<User> userOptional = Optional.empty();
             Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(FIND_BY_LOGIN_QUERY);
-            statement.setString(1, login);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, param);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 User user = new User();
-                user.setId((int) resultSet.getLong("id"));
-                user.setUsername(resultSet.getString("username"));
-                user.setEmail(resultSet.getString("email"));
+                user.setId((int) resultSet.getLong(USER_ID_FIELD));
+                user.setUsername(resultSet.getString(USER_USERNAME_FIELD));
+                user.setEmail(resultSet.getString(USER_EMAIL_FIELD));
                 userOptional = Optional.of(user);
             }
             ConnectionPool.getInstance().releaseConnection(connection);
             return userOptional;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        try {
-            Optional<User> userOptional = Optional.empty();
-            Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(FIND_BY_EMAIL_QUERY);
-            statement.setString(1, email);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                User user = new User();
-                user.setId((int) resultSet.getLong("id"));
-                user.setUsername(resultSet.getString("username"));
-                user.setEmail(resultSet.getString("email"));
-                userOptional = Optional.of(user);
-            }
-            ConnectionPool.getInstance().releaseConnection(connection);
-            return userOptional;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public boolean insert(User user) {
+    public boolean insert(User user) throws DaoException {
         try {
             Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(INSERT_USER_QUERY);
@@ -99,6 +97,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPassword());
+            statement.setString(4, user.getConfirmationCode());
 
             int rowsInserted = statement.executeUpdate();
 
@@ -107,7 +106,7 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
             return rowsInserted > 0;
         } catch (SQLException e) {
             LOGGER.error("Failed to insert user into the DB.", e);
-            throw new RuntimeException(e);
+            throw new DaoException(e);
         }
     }
 
@@ -122,7 +121,19 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public User update(User user) {
-        return null;
+    public User update(User user) throws DaoException {
+        try {
+            Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_USER_QUERY);
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getUsername());
+            statement.setString(3, user.getActive().toString());
+            statement.setString(4, String.valueOf(user.getId()));
+
+            return user;
+        } catch (SQLException e) {
+            LOGGER.error("Failed to update user.", e);
+            throw new DaoException(e);
+        }
     }
 }

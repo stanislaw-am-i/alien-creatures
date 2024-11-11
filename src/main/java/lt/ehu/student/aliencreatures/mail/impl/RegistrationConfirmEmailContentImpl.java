@@ -24,7 +24,7 @@ public class RegistrationConfirmEmailContentImpl implements EmailContent {
                         "<a href=\"%s\">Confirm your email</a><br/><br/>" +
                         "If you didn't register, please ignore this message.<br/><br/>" +
                         "Best regards,<br/>" +
-                        "The Team",
+                        "The Alien Creatures Team",
                 userName, confirmationUrl
         );
     }

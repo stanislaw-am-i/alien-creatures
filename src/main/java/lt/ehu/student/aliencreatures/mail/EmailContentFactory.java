@@ -1,5 +1,6 @@
 package lt.ehu.student.aliencreatures.mail;
 
+import lt.ehu.student.aliencreatures.mail.impl.GreetingNewUserEmailContentImpl;
 import lt.ehu.student.aliencreatures.mail.impl.RegistrationConfirmEmailContentImpl;
 
 public class EmailContentFactory {
@@ -8,6 +9,8 @@ public class EmailContentFactory {
         switch (emailType) {
             case REGISTRATION_CONFIRMATION:
                 return new RegistrationConfirmEmailContentImpl(userName, url);
+            case GREETING_NEW_USER:
+                return new GreetingNewUserEmailContentImpl(userName, url);
             default:
                 throw new IllegalArgumentException("Invalid email type");
         }

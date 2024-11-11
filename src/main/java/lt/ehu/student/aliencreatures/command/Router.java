@@ -6,12 +6,14 @@ package lt.ehu.student.aliencreatures.command;
  *
  * */
 public class Router {
-    private String page = "index.jsp";
+    private String page = CommandConstant.INDEX_PAGE;
     private Type type = Type.FORWARD;
 
     enum Type {
         FORWARD, REDIRECT
     }
+
+    public Router() {}
 
     public Router(String page) {
         this.page = page;
@@ -32,5 +34,9 @@ public class Router {
 
     public void setRedirect() {
         this.type = Type.REDIRECT;
+    }
+
+    public boolean isRedirect() {
+        return this.type == Type.REDIRECT;
     }
 }

@@ -7,6 +7,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import lt.ehu.student.aliencreatures.command.Command;
 import lt.ehu.student.aliencreatures.command.CommandType;
+import lt.ehu.student.aliencreatures.command.Router;
 import lt.ehu.student.aliencreatures.exception.CommandException;
 import lt.ehu.student.aliencreatures.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
@@ -22,30 +23,33 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LOGGER.info("Received Get Request.");
+        LOGGER.debug("Received Get Request.");
         processRequest(req, resp);
-        LOGGER.info("Get Request has been processed.");
+        LOGGER.debug("Get Request has been processed.");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LOGGER.info("Received Post Request.");
+        LOGGER.debug("Received Post Request.");
         processRequest(req, resp);
-        LOGGER.info("Post Request has been processed.");
+        LOGGER.debug("Post Request has been processed.");
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        String commandStr = req.getParameter("command");
-        LOGGER.info("The Command {} is processed.", commandStr);
+        resp.setContentType(ControllerConstant.CONTENT_TYPE_HTML);
+        String commandStr = req.getParameter(ControllerConstant.COMMAND_PARAM);
+        LOGGER.debug("The Command {} is processed.", commandStr);
         Command command = CommandType.defineCommand(commandStr);
         try {
-            String page = command.execute(req);
-            //req.getRequestDispatcher(page).forward(req, resp);
-            resp.sendRedirect(page);
+            Router router = command.execute(req);
+            if (router.isRedirect()) {
+                resp.sendRedirect(router.getPage());
+            } else {
+                req.getRequestDispatcher(router.getPage()).forward(req, resp);
+            }
         } catch (CommandException e) {
-            req.setAttribute("error_msg", e.getCause());
-            req.getRequestDispatcher("jsp/error/error_500.jsp").forward(req, resp);
+            req.setAttribute(ControllerConstant.ATTR_ERROR_MESSAGE, e.getCause());
+            req.getRequestDispatcher(ControllerConstant.ERROR_500_PAGE).forward(req, resp);
         }
     }
 

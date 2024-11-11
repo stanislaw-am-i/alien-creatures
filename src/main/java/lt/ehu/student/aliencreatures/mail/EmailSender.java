@@ -1,5 +1,8 @@
 package lt.ehu.student.aliencreatures.mail;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -10,6 +13,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class EmailSender {
+    private static final Logger LOGGER = LogManager.getLogger(EmailSender.class);
+    private static final String SET_CONTENT_TYPE = "text/html";
+
     private MimeMessage message;
     private String sendToEmail;
     private String mailSubject;
@@ -20,26 +26,26 @@ public class EmailSender {
         this.sendToEmail = sendToEmail;
         this.mailSubject = emailContent.getSubject();
         this.mailText = emailContent.getBody();
-        this.properties = props; // todo: property handler
+        this.properties = props;
     }
 
     public void send() {
         try {
             initMessage();
-            Transport.send(message); // sending mail
+            Transport.send(message);// sending mail
         } catch (AddressException e) {
-            System.err.println("Invalid address: " + sendToEmail + " " + e); // in log
+            LOGGER.warn("Invalid address: {} {}", sendToEmail, e);
         } catch (MessagingException e) {
-            System.err.println("Error generating or sending message: " + e); // in log
+            LOGGER.warn("Error generating or sending message: {}", e);
         }
     }
 
     private void initMessage() throws MessagingException {
-        Session mailSession = SessionFactory.createSession(properties); // mail session object
+        Session mailSession = SessionFactory.createSession(properties);
         mailSession.setDebug(true);
-        message = new MimeMessage(mailSession); // create a mailing object
-        // loading parameters into the mail message object
-        message.setSubject(mailSubject); message.setContent(mailText, "text/html");
+        message = new MimeMessage(mailSession);
+        message.setSubject(mailSubject);
+        message.setContent(mailText, SET_CONTENT_TYPE);
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(sendToEmail));
     }
 
