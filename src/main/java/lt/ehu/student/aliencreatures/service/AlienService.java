@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface AlienService {
     boolean addNewCharacter(String name, String lor) throws ServiceException;
+    boolean addNewCharacter(Alien alien) throws ServiceException;
     boolean checkDuplicate(String name, String lor) throws ServiceException;
     List<Alien> fetchListOfCharacters() throws ServiceException;
 }

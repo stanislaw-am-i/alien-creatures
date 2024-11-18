@@ -13,7 +13,17 @@ public class AlienServiceImpl implements AlienService {
     @Override
     public boolean addNewCharacter(String name, String lor) throws ServiceException {
         try {
+            System.out.println(16 + " Add Alien");
             return AlienDaoImpl.getInstance().insert(new Alien(name, lor));
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean addNewCharacter(Alien alien) throws ServiceException {
+        try {
+            return AlienDaoImpl.getInstance().insert(alien);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

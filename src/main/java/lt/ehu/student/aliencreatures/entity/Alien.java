@@ -1,8 +1,16 @@
 package lt.ehu.student.aliencreatures.entity;
 
+import java.util.Base64;
+
 public class Alien extends AbstractEntity {
     private String name;
     private String lor;
+    private byte[] image;
+    private String base64Image;
+
+    public String getBase64Image() {
+        return base64Image;
+    }
 
     public Alien() {}
 
@@ -25,5 +33,17 @@ public class Alien extends AbstractEntity {
 
     public void setLor(String lor) {
         this.lor = lor;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+
+        if (image != null) {
+            this.base64Image = Base64.getEncoder().encodeToString(image);
+        }
     }
 }

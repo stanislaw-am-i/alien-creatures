@@ -14,6 +14,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @WebServlet(name = "alienCreaturesServlet", value = {"/controller", "*.do"})
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024 * 2, // Files larger than 2MB will be written to disk.
+        maxFileSize = 1024 * 1024 * 10,      // 10MB is maximum size of an individual uploaded file.
+        maxRequestSize = 1024 * 1024 * 50    // 50MB is maximum size of the entire request, including all files and form data.
+)
 public class Controller extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
 

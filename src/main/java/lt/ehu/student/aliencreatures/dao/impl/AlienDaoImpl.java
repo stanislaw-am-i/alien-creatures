@@ -14,8 +14,8 @@ import java.util.List;
 
 public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
     private static final Logger LOGGER = LogManager.getLogger(AlienDaoImpl.class);
-    private static final String ADD_CHARACTER_QUERY = "INSERT INTO characters (name, lor) VALUES (?, ?)";
-    private static final String FIND_ALL_QUERY = "SELECT id, name, lor FROM characters";
+    private static final String ADD_CHARACTER_QUERY = "INSERT INTO characters (name, lor, image) VALUES (?, ?, ?)";
+    private static final String FIND_ALL_QUERY = "SELECT id, name, lor, image FROM characters";
     private static final String CHECK_DUPLICATE_QUERY = "SELECT COUNT(*) FROM characters WHERE name = ? AND lor = ?";
     private static AlienDaoImpl instance = new AlienDaoImpl();
 
@@ -32,6 +32,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
             PreparedStatement statement = connection.prepareStatement(ADD_CHARACTER_QUERY);
             statement.setString(1, alien.getName());
             statement.setString(2, alien.getLor());
+            statement.setBytes(3, alien.getImage());
             int rowsAffected = statement.executeUpdate();
             ConnectionPool.getInstance().releaseConnection(connection);
             return rowsAffected == 1;
@@ -59,6 +60,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
                 alien.setId(result.getInt("id"));
                 alien.setName(result.getString("name"));
                 alien.setLor(result.getString("lor"));
+                alien.setImage(result.getBytes("image"));
 
                 aliens.add(alien);
             }
