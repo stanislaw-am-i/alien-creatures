@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +10,31 @@
 </head>
 <body>
 <main class="container">
+    <!-- Header Section -->
     <header>
         <jsp:include page="header.jsp"/>
     </header>
+
+    <!-- Form Section -->
+    <section>
+        <h2>Add New Alien Character</h2>
+        <form method="POST" action="${pageContext.request.contextPath}/controller" enctype="multipart/form-data">
+            <input type="hidden" name="command" value="add_alien"/>
+
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" value="" required />
+
+            <label for="lor">Lor</label>
+            <input type="text" id="lor" name="lor" value="" required />
+
+            <label for="file">Choose Image</label>
+            <input type="file" id="file" name="file" />
+
+            <p class="error-message">${errorPassMessage}</p>
+
+            <button type="submit">Add Character</button>
+        </form>
+    </section>
 
     <!-- Alien List Section -->
     <section>

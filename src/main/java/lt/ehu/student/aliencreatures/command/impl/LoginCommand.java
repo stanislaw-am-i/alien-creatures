@@ -23,6 +23,7 @@ public class LoginCommand implements Command {
             if (userService.authenticate(login, password)) {
                 request.setAttribute(CommandConstant.ATTR_USER, login);
                 session.setAttribute(CommandConstant.ATTR_USER_NAME, login);
+                // todo: get aliens
                 page = CommandConstant.MAIN_PAGE;
             } else {
                 System.out.println(28);

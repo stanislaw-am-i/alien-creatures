@@ -9,6 +9,13 @@ import lt.ehu.student.aliencreatures.service.AlienService;
 import java.util.List;
 
 public class AlienServiceImpl implements AlienService {
+    private static final AlienServiceImpl instance = new AlienServiceImpl();
+
+    private AlienServiceImpl() {}
+
+    public static AlienServiceImpl getInstance() {
+        return instance;
+    }
 
     @Override
     public boolean addNewCharacter(String name, String lor) throws ServiceException {

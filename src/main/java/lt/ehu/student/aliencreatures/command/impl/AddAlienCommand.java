@@ -39,7 +39,7 @@ public class AddAlienCommand implements Command {
             Alien alien = new Alien(name, lor);
             alien.setImage(imageData);
 
-            AlienService alienService = new AlienServiceImpl();
+            AlienService alienService = AlienServiceImpl.getInstance();
             String page = CommandConstant.ALIENS_PAGE;
             if (!validator.validateNotEmpty(name) || !validator.validateNotEmpty(lor)) {
                 LOGGER.debug(45 + " Add Alien");
