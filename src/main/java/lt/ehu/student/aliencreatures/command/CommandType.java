@@ -9,6 +9,7 @@ public enum CommandType {
     SHOW_ALIEN(new ShowAlienCommand()),
     SIGN_UP(new SignUpCommand()),
     CONFIRM_REGISTRATION(new ConfirmRegistrationCommand()),
+    RESEND_CONFIRMATION_MAIL(new ResendConfirmationMailCommand()),
     DEFAULT(new DefaultCommand());
 
     private Command command;

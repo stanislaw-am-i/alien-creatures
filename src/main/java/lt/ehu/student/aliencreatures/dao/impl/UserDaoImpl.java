@@ -15,15 +15,16 @@ import java.util.Optional;
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final Logger LOGGER = LogManager.getLogger(UserDaoImpl.class);
     private static final String AUTH_QUERY = "SELECT password FROM users WHERE username = ?";
-    private static final String FIND_BY_LOGIN_QUERY = "SELECT id, username, email FROM users WHERE username = ? LIMIT 1";
+    private static final String FIND_BY_LOGIN_QUERY = "SELECT id, username, email, is_active FROM users WHERE username = ? LIMIT 1";
     private static final String FIND_BY_EMAIL_QUERY = "SELECT id, username, email FROM users WHERE email = ? LIMIT 1";
-    private static final String FIND_BY_CONFIRMATION_CODE_QUERY = "SELECT id, username, email FROM users WHERE confirmation_code = ? LIMIT 1";
+    private static final String FIND_BY_CONFIRMATION_CODE_QUERY = "SELECT id, username, email, is_active FROM users WHERE confirmation_code = ? LIMIT 1";
     private static final String INSERT_USER_QUERY = "INSERT INTO users (username, email, password, confirmation_code) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_USER_QUERY = "UPDATE users set email = ?, username = ?, is_active = ? WHERE id = ?";
 
     private static final String USER_ID_FIELD = "id";
     private static final String USER_EMAIL_FIELD = "email";
     private static final String USER_USERNAME_FIELD = "username";
+    private static final String USER_IS_ACTIVE_FIELD = "is_active";
 
     private static UserDaoImpl instance = new UserDaoImpl();
 
@@ -71,6 +72,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         try {
             Optional<User> userOptional = Optional.empty();
             Connection connection = ConnectionPool.getInstance().getConnection();
+            System.out.println(query);
+            System.out.println(param);
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, param);
             ResultSet resultSet = statement.executeQuery();
@@ -79,6 +82,10 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 user.setId((int) resultSet.getLong(USER_ID_FIELD));
                 user.setUsername(resultSet.getString(USER_USERNAME_FIELD));
                 user.setEmail(resultSet.getString(USER_EMAIL_FIELD));
+
+                boolean isActive = resultSet.getBoolean(USER_IS_ACTIVE_FIELD);
+                user.setStatus(isActive ? User.Status.ACTIVE : User.Status.INACTIVE);
+
                 userOptional = Optional.of(user);
             }
             ConnectionPool.getInstance().releaseConnection(connection);
@@ -122,15 +129,22 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
 
     @Override
     public User update(User user) throws DaoException {
-        try {
-            Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(UPDATE_USER_QUERY);
+        // todo: update
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_QUERY)) {
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getUsername());
-            statement.setString(3, user.getActive().toString());
-            statement.setString(4, String.valueOf(user.getId()));
+            statement.setBoolean(3, user.getActive());
+            statement.setLong(4, user.getId());
 
-            return user;
+            int rowsUpdated = statement.executeUpdate();
+            ConnectionPool.getInstance().releaseConnection(connection);
+            if (rowsUpdated > 0) {
+                LOGGER.debug("User with ID " + user.getId() + " was successfully updated.");
+                return user;
+            } else {
+                throw new DaoException("No user was updated. User ID: " + user.getId());
+            }
         } catch (SQLException e) {
             LOGGER.error("Failed to update user.", e);
             throw new DaoException(e);

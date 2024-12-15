@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lt.ehu.student.aliencreatures.command.CommandConstant;
 import lt.ehu.student.aliencreatures.controller.listener.ServletContextListenerImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -25,6 +26,7 @@ public class PreIndexFilter implements Filter {
         LOGGER.debug("----------> Session In  PreIndexFilter:" + (session != null ? session.getId(): "sessionNotCreated" ));
         chain.doFilter(request, response);
     }
+
     public void destroy() {
     }
 }

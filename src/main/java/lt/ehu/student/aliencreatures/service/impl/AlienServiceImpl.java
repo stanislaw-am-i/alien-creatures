@@ -4,6 +4,7 @@ import lt.ehu.student.aliencreatures.dao.impl.AlienDaoImpl;
 import lt.ehu.student.aliencreatures.entity.Alien;
 import lt.ehu.student.aliencreatures.exception.DaoException;
 import lt.ehu.student.aliencreatures.exception.ServiceException;
+import lt.ehu.student.aliencreatures.page.PaginatedResult;
 import lt.ehu.student.aliencreatures.service.AlienService;
 
 import java.util.List;
@@ -49,6 +50,20 @@ public class AlienServiceImpl implements AlienService {
     public List<Alien> fetchListOfCharacters() throws ServiceException {
         try {
             return AlienDaoImpl.getInstance().findAll();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    public PaginatedResult<Alien> fetchAliensForPage(int currentPage, int pageSize) throws ServiceException {
+        try {
+            int totalRecords = AlienDaoImpl.getInstance().countAliens();
+            int offset = (currentPage - 1) * pageSize;
+
+            List<Alien> aliens = AlienDaoImpl.getInstance().fetchAliens(pageSize, offset);
+            int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+
+            return new PaginatedResult<>(aliens, currentPage, totalPages);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

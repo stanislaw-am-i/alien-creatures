@@ -21,9 +21,11 @@ public class ConfirmRegistrationCommand implements Command {
             if (isActivated) {
                 request.setAttribute(CommandConstant.ATTR_CONFIRM_REG_SUCCESS_MESSAGE, CommandConstant.CONFIRM_REG_SUCCESS_MESSAGE);
             } else {
+                System.out.println(CommandConstant.CONFIRM_REG_ERROR_MESSAGE);
                 request.setAttribute(CommandConstant.ATTR_CONFIRM_REG_ERROR_MESSAGE, CommandConstant.CONFIRM_REG_ERROR_MESSAGE);
             }
         } catch (ServiceException e) {
+            System.out.println(e.getMessage());
             request.setAttribute(CommandConstant.ATTR_CONFIRM_REG_ERROR_MESSAGE, e.getMessage());
         }
 

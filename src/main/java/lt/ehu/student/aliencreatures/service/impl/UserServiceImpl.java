@@ -117,6 +117,7 @@ public class UserServiceImpl implements UserService {
             return userDao.findByConformationCode(code);
         } catch (DaoException e) {
             // todo: change exp msg
+            System.out.println(e.getMessage());
             throw new ServiceException(ServiceConstant.FIND_USER_BY_EMAIL_FAILED_EXP, e);
         }
     }

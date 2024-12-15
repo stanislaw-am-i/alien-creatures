@@ -8,6 +8,7 @@ public class CommandConstant {
     public static final String LOGIN_PAGE = "jsp/login.jsp";
     public static final String INDEX_PAGE = "index.jsp";
     public static final String SIGNUP_PAGE = "jsp/signup.jsp";
+    public static final String NOTIFICATION_PAGE = "jsp/notification.jsp";
     public static final String CONFIRM_REGISTRATION_PAGE = "jsp/confirm_registration.jsp";
 
     // Error messages
@@ -29,6 +30,8 @@ public class CommandConstant {
     public static final String ATTR_ALIENS_LIST = "aliensList";
     public static final String ATTR_USER = "user";
     public static final String ATTR_USER_NAME = "user_name";
+    public static final String ATTR_USER_EMAIL = "user_email";
+    public static final String ATTR_USER_IS_ACTIVE = "is_active";
     public static final String ATTR_CURRENT_PAGE = "current_page";
 
     // Request parameters

@@ -10,12 +10,12 @@
             <li><a href="${pageContext.request.contextPath}">Home</a></li>
         </ul>
         <ul>
-            <c:if test="${empty sessionScope.user_name}">
+            <c:if test="${sessionScope.is_active == false || sessionScope.is_active == null}">
                 <li><a href="jsp/login.jsp">Login</a></li>
                 <li><a href="jsp/signup.jsp">Sign Up</a></li>
             </c:if>
 
-            <c:if test="${not empty sessionScope.user_name}">
+            <c:if test="${sessionScope.is_active == true}">
                 <li><a href="jsp/profile.jsp">Profile</a></li>
                 <li>
                     <form method="POST" action="${pageContext.request.contextPath}/controller" style="display: inline;">

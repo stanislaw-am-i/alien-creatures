@@ -25,7 +25,7 @@ public class SignUpCommand implements Command {
                 userService.sendEmailToVerifyUser(login, email, instanceUrl);
             }
             request.setAttribute(CommandConstant.ATTR_USER, login);
-            page = CommandConstant.MAIN_PAGE;
+            page = "jsp/confirm_registration.jsp";
         } catch (ServiceException e) {
             request.setAttribute(CommandConstant.ERROR_REGISTRATION_MESSAGE, e.getMessage());
             page = CommandConstant.SIGNUP_PAGE;

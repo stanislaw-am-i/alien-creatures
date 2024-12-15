@@ -3,10 +3,19 @@ package lt.ehu.student.aliencreatures.entity;
 public class User extends AbstractEntity {
     private String username;
     private String email;
-    private String role;
     private String password;
     private Boolean isActive;
     private String confirmationCode;
+    private Role role;
+    private Status status;
+
+    public enum Role {
+        ADMIN, MODER, USER, GUEST
+    }
+
+    public enum Status {
+        ACTIVE, INACTIVE, BANNED
+    }
 
     public String getPassword() {
         return password;
@@ -32,14 +41,6 @@ public class User extends AbstractEntity {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public Boolean getActive() {
         return isActive;
     }
@@ -56,4 +57,19 @@ public class User extends AbstractEntity {
         this.confirmationCode = confirmationCode;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }

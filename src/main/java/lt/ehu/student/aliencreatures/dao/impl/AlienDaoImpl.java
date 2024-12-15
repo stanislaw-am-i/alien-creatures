@@ -16,7 +16,9 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
     private static final Logger LOGGER = LogManager.getLogger(AlienDaoImpl.class);
     private static final String ADD_CHARACTER_QUERY = "INSERT INTO characters (name, lor, image) VALUES (?, ?, ?)";
     private static final String FIND_ALL_QUERY = "SELECT id, name, lor, image FROM characters";
+    private static final String FETCH_ALIENS_QUERY = "SELECT id, name, lor, image FROM characters LIMIT ? OFFSET ?";
     private static final String CHECK_DUPLICATE_QUERY = "SELECT COUNT(*) FROM characters WHERE name = ? AND lor = ?";
+    private static final String COUNT_ALIENS = "SELECT COUNT(*) FROM characters";
     private static AlienDaoImpl instance = new AlienDaoImpl();
 
     private AlienDaoImpl() {}
@@ -94,4 +96,52 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public List<Alien> fetchAliens(int limit, int offset) throws DaoException {
+        List<Alien> aliens = new ArrayList<>();
+        try {
+            Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(FETCH_ALIENS_QUERY);
+            statement.setInt(1, limit);
+            statement.setInt(2, offset);
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+                Alien alien = new Alien();
+                alien.setId(result.getInt("id"));
+                alien.setName(result.getString("name"));
+                alien.setLor(result.getString("lor"));
+                alien.setImage(result.getBytes("image"));
+                aliens.add(alien);
+            }
+
+            ConnectionPool.getInstance().releaseConnection(connection);
+            return aliens;
+        } catch (SQLException e) {
+            LOGGER.error("Failed to fetch the list of aliens records.", e);
+            throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public int countAliens() throws DaoException {
+        // todo: create finally block
+        try {
+            Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(COUNT_ALIENS);
+            ResultSet result = statement.executeQuery();
+
+            ConnectionPool.getInstance().releaseConnection(connection);
+            if (result.next()) {
+                return result.getInt(1);
+            } else {
+                throw new DaoException("Failed to count aliens: No result returned.");
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Failed to select a record from DB.", e);
+            throw new DaoException(e);
+        }
+    }
+
 }
