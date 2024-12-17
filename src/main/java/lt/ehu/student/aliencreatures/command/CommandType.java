@@ -6,6 +6,7 @@ public enum CommandType {
     LOGIN(new LoginCommand()),
     LOGOUT(new LogOutCommand()),
     ADD_ALIEN(new AddAlienCommand()),
+    DELETE_ALIEN(new DeleteAlienCommand()),
     SHOW_ALIEN(new ShowAlienCommand()),
     SIGN_UP(new SignUpCommand()),
     CONFIRM_REGISTRATION(new ConfirmRegistrationCommand()),
@@ -24,6 +25,9 @@ public enum CommandType {
 
     public static Command defineCommand(String commandStr) {
         // todo: via stream and add exception handler probably
+        if (commandStr == null || commandStr.isBlank()) {
+            return CommandType.DEFAULT.getCommand();
+        }
         return CommandType.valueOf(commandStr.toUpperCase()).getCommand();
     }
 }

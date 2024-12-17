@@ -43,6 +43,7 @@ public class Controller extends HttpServlet {
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType(ControllerConstant.CONTENT_TYPE_HTML);
+        resp.setCharacterEncoding("UTF-8"); // todo: const
         String commandStr = req.getParameter(ControllerConstant.COMMAND_PARAM);
         LOGGER.debug("The Command {} is processed.", commandStr);
         Command command = CommandType.defineCommand(commandStr);

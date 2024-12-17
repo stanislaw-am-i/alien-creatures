@@ -10,6 +10,7 @@ public class CommandConstant {
     public static final String SIGNUP_PAGE = "jsp/signup.jsp";
     public static final String NOTIFICATION_PAGE = "jsp/notification.jsp";
     public static final String CONFIRM_REGISTRATION_PAGE = "jsp/confirm_registration.jsp";
+    public static final String ADD_ALIEN_PAGE = "jsp/add_alien.jsp";
 
     // Error messages
     public static final String ERROR_INVALID_PARAMS = "Provided params are not valid";
@@ -33,6 +34,7 @@ public class CommandConstant {
     public static final String ATTR_USER_EMAIL = "user_email";
     public static final String ATTR_USER_IS_ACTIVE = "is_active";
     public static final String ATTR_CURRENT_PAGE = "current_page";
+    public static final String ATTR_SUCCESS_MESSAGE = "isSuccessMessage";
 
     // Request parameters
     public static final String NAME_PARAM = "name";

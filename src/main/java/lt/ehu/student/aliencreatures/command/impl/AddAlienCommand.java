@@ -2,6 +2,7 @@ package lt.ehu.student.aliencreatures.command.impl;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import lt.ehu.student.aliencreatures.command.Command;
 import lt.ehu.student.aliencreatures.command.CommandConstant;
@@ -31,6 +32,12 @@ public class AddAlienCommand implements Command {
             Router router = new Router();
             String name = request.getParameter(CommandConstant.NAME_PARAM);
             String lor = request.getParameter(CommandConstant.LOR_PARAM);
+
+            HttpSession session = request.getSession();
+            Integer userId = (session != null && session.getAttribute("currentUserId") != null)
+                    ? (Integer) session.getAttribute("currentUserId")
+                    : null;
+
             Part imagePart = request.getPart("file");
             // todo: make validation for image uploading
             InputStream imageStream = imagePart.getInputStream();
@@ -39,10 +46,13 @@ public class AddAlienCommand implements Command {
             Alien alien = new Alien(name, lor);
             alien.setImage(imageData);
 
+            if (userId != null) {
+                alien.setUserId(userId);
+            }
+
             AlienService alienService = AlienServiceImpl.getInstance();
-            String page = CommandConstant.ALIENS_PAGE;
+            String page = CommandConstant.ADD_ALIEN_PAGE;
             if (!validator.validateNotEmpty(name) || !validator.validateNotEmpty(lor)) {
-                LOGGER.debug(45 + " Add Alien");
                 request.setAttribute(CommandConstant.ATTR_ERROR_MESSAGE, CommandConstant.ERROR_INVALID_PARAMS);
                 router.setPage(page);
                 router.setRedirect();
@@ -50,21 +60,16 @@ public class AddAlienCommand implements Command {
             }
 
             boolean isExists = alienService.checkDuplicate(name, lor);
-            LOGGER.debug(48 + " Add Alien");
             if (isExists) {
                 request.setAttribute(CommandConstant.ATTR_ERROR_MESSAGE, CommandConstant.ERROR_DUPLICATE_ALIEN);
-            //} else if (alienService.addNewCharacter(alien)) {
-            } else if (true) {
-                LOGGER.debug(52 + " Add Alien");
-                List<Alien> aliens = alienService.fetchListOfCharacters();
-                LOGGER.debug("Aliens size: " + aliens.size());
-                request.setAttribute(CommandConstant.ATTR_ALIENS_LIST, aliens);
             } else {
-                request.setAttribute(CommandConstant.ATTR_ERROR_MESSAGE, CommandConstant.ERROR_ALIEN_SAVE_FAILED);
+                boolean isCreated = alienService.addNewCharacter(alien);
+                request.setAttribute(CommandConstant.ATTR_SUCCESS_MESSAGE, isCreated);
             }
 
+
+
             router.setPage(page);
-            //router.setRedirect();
             return router;
         } catch (ServiceException e) {
             throw new CommandException(e);

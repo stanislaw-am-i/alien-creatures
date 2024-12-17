@@ -21,7 +21,6 @@ public class AlienServiceImpl implements AlienService {
     @Override
     public boolean addNewCharacter(String name, String lor) throws ServiceException {
         try {
-            System.out.println(16 + " Add Alien");
             return AlienDaoImpl.getInstance().insert(new Alien(name, lor));
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -55,15 +54,34 @@ public class AlienServiceImpl implements AlienService {
         }
     }
 
-    public PaginatedResult<Alien> fetchAliensForPage(int currentPage, int pageSize) throws ServiceException {
+    public PaginatedResult<Alien> fetchAliensForPage(String pageParam, String pageSizeParam) throws ServiceException {
         try {
+            int currentPage = 1;
+            if (pageParam != null) {
+                currentPage = Integer.parseInt(pageParam);
+            }
+
+            int pageSize = 5;
+            if (pageSizeParam != null) {
+                pageSize = Integer.parseInt(pageSizeParam);
+            }
+
             int totalRecords = AlienDaoImpl.getInstance().countAliens();
             int offset = (currentPage - 1) * pageSize;
 
             List<Alien> aliens = AlienDaoImpl.getInstance().fetchAliens(pageSize, offset);
             int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
 
-            return new PaginatedResult<>(aliens, currentPage, totalPages);
+            return new PaginatedResult<>(aliens, currentPage, totalPages, pageSize);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteAlien(Alien alien) throws ServiceException {
+        try {
+            return AlienDaoImpl.getInstance().delete(alien);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

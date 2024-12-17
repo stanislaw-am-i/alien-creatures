@@ -6,11 +6,13 @@ public class PaginatedResult<T> {
     private final List<T> items;
     private final int currentPage;
     private final int totalPages;
+    private final int pageSize;
 
-    public PaginatedResult(List<T> items, int currentPage, int totalPages) {
+    public PaginatedResult(List<T> items, int currentPage, int totalPages, int pageSize) {
         this.items = items;
         this.currentPage = currentPage;
         this.totalPages = totalPages;
+        this.pageSize = pageSize;
     }
 
     public List<T> getItems() {
@@ -23,5 +25,9 @@ public class PaginatedResult<T> {
 
     public int getTotalPages() {
         return totalPages;
+    }
+
+    public int getPageSize() {
+        return pageSize;
     }
 }

@@ -15,9 +15,9 @@ import java.util.Optional;
 public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private static final Logger LOGGER = LogManager.getLogger(UserDaoImpl.class);
     private static final String AUTH_QUERY = "SELECT password FROM users WHERE username = ?";
-    private static final String FIND_BY_LOGIN_QUERY = "SELECT id, username, email, is_active FROM users WHERE username = ? LIMIT 1";
-    private static final String FIND_BY_EMAIL_QUERY = "SELECT id, username, email FROM users WHERE email = ? LIMIT 1";
-    private static final String FIND_BY_CONFIRMATION_CODE_QUERY = "SELECT id, username, email, is_active FROM users WHERE confirmation_code = ? LIMIT 1";
+    private static final String FIND_BY_LOGIN_QUERY = "SELECT id, username, email, is_active, role FROM users WHERE username = ? LIMIT 1";
+    private static final String FIND_BY_EMAIL_QUERY = "SELECT id, username, email, is_active, role FROM users WHERE email = ? LIMIT 1";
+    private static final String FIND_BY_CONFIRMATION_CODE_QUERY = "SELECT id, username, email, is_active, role FROM users WHERE confirmation_code = ? LIMIT 1";
     private static final String INSERT_USER_QUERY = "INSERT INTO users (username, email, password, confirmation_code) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_USER_QUERY = "UPDATE users set email = ?, username = ?, is_active = ? WHERE id = ?";
 
@@ -72,8 +72,6 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
         try {
             Optional<User> userOptional = Optional.empty();
             Connection connection = ConnectionPool.getInstance().getConnection();
-            System.out.println(query);
-            System.out.println(param);
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, param);
             ResultSet resultSet = statement.executeQuery();
@@ -82,6 +80,10 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
                 user.setId((int) resultSet.getLong(USER_ID_FIELD));
                 user.setUsername(resultSet.getString(USER_USERNAME_FIELD));
                 user.setEmail(resultSet.getString(USER_EMAIL_FIELD));
+
+                String role = resultSet.getString("role");
+                user.setRole(role.equalsIgnoreCase("ADMIN") ? User.Role.ADMIN : (role.equalsIgnoreCase("MODER") ? User.Role.MODER :  User.Role.USER));
+                //user.setRole(resultSet.getString("role"));
 
                 boolean isActive = resultSet.getBoolean(USER_IS_ACTIVE_FIELD);
                 user.setStatus(isActive ? User.Status.ACTIVE : User.Status.INACTIVE);

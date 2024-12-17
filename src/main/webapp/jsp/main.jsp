@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.userLocale}" />
+<fmt:setBundle basename="locale.messages"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +23,24 @@
             padding: 5px 10px;
             border-radius: 5px;
         }
+        .add-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .add-btn:hover {
+            background-color: #218838;
+        }
+        .error-banner {
+            background-color: #f44336; /* Red for error */
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -30,12 +51,23 @@
 
     <section>
         <h2>Alien Creatures</h2>
+        <c:if test="${isSuccessMessage == true}">
+            <div class="success-message">
+                <fmt:message key="delete_alien" />
+            </div>
+        </c:if>
+        <c:if test="${sessionScope.is_active == true}">
+            <a class="add-btn" href="${pageContext.request.contextPath}/jsp/add_alien.jsp">
+                Add New Alien
+            </a>
+        </c:if>
         <table>
             <thead>
             <tr>
                 <th>Name</th>
                 <th>Lor</th>
                 <th>Image</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -46,6 +78,14 @@
                     <td>
                         <c:if test="${not empty alien.base64Image}">
                             <img src="data:image/jpeg;base64,${alien.base64Image}" alt="Character Image" style="max-width: 100px; height: auto;"/>
+                        </c:if>
+                    </td>
+                    <td>
+                        <c:if test="${alien.userId == sessionScope.currentUserId || sessionScope.userRole == 'ADMIN' || sessionScope.userRole == 'MODER'}">
+                            <a href="${pageContext.request.contextPath}/controller?command=DELETE_ALIEN&alienId=${alien.id}"
+                               style="background-color: red; color: white; padding: 5px; text-decoration: none; border-radius: 3px;">
+                                Delete
+                            </a>
                         </c:if>
                     </td>
                 </tr>

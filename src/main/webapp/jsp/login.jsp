@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.userLocale}" />
+<fmt:setBundle basename="locale.messages"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,7 +36,7 @@
 <main class="container">
     <div class="form-container">
         <div class="form-wrapper">
-            <h1>Login</h1>
+            <h1><fmt:message key="login_page" /></h1>
             <form method="POST" action="${pageContext.request.contextPath}/controller">
                 <input type="hidden" name="command" value="Login"/>
 

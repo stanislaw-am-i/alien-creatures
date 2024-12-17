@@ -14,11 +14,13 @@ import java.util.List;
 
 public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
     private static final Logger LOGGER = LogManager.getLogger(AlienDaoImpl.class);
-    private static final String ADD_CHARACTER_QUERY = "INSERT INTO characters (name, lor, image) VALUES (?, ?, ?)";
-    private static final String FIND_ALL_QUERY = "SELECT id, name, lor, image FROM characters";
-    private static final String FETCH_ALIENS_QUERY = "SELECT id, name, lor, image FROM characters LIMIT ? OFFSET ?";
+    private static final String ADD_CHARACTER_QUERY = "INSERT INTO characters (name, lor, image, user_id) VALUES (?, ?, ?, ?)";
+    private static final String FIND_ALL_QUERY = "SELECT id, name, lor, image, user_id FROM characters";
+    private static final String FETCH_ALIENS_QUERY = "SELECT id, name, lor, image, user_id FROM characters LIMIT ? OFFSET ?";
     private static final String CHECK_DUPLICATE_QUERY = "SELECT COUNT(*) FROM characters WHERE name = ? AND lor = ?";
     private static final String COUNT_ALIENS = "SELECT COUNT(*) FROM characters";
+    private static final String DELETE_ALIEN_QUERY = "DELETE FROM characters WHERE id = ?";
+
     private static AlienDaoImpl instance = new AlienDaoImpl();
 
     private AlienDaoImpl() {}
@@ -35,6 +37,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
             statement.setString(1, alien.getName());
             statement.setString(2, alien.getLor());
             statement.setBytes(3, alien.getImage());
+            statement.setInt(4, alien.getUserId());
             int rowsAffected = statement.executeUpdate();
             ConnectionPool.getInstance().releaseConnection(connection);
             return rowsAffected == 1;
@@ -45,8 +48,20 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
     }
 
     @Override
-    public boolean delete(Alien alien) {
-        return false;
+    public boolean delete(Alien alien) throws DaoException {
+        try {
+            Connection connection = ConnectionPool.getInstance().getConnection();
+            try (PreparedStatement statement = connection.prepareStatement(DELETE_ALIEN_QUERY)) {
+                statement.setLong(1, alien.getId());
+                int rowsAffected = statement.executeUpdate();
+                return rowsAffected == 1;
+            } finally {
+                ConnectionPool.getInstance().releaseConnection(connection);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Failed to delete alien with id {}", alien.getId(), e);
+            throw new DaoException("Failed to delete alien", e);
+        }
     }
 
     @Override
@@ -113,6 +128,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
                 alien.setName(result.getString("name"));
                 alien.setLor(result.getString("lor"));
                 alien.setImage(result.getBytes("image"));
+                alien.setUserId(result.getInt("user_id"));
                 aliens.add(alien);
             }
 

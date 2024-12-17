@@ -1,4 +1,8 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.userLocale}" />
+<fmt:setBundle basename="locale.messages"/>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +11,15 @@
 <header class="container">
     <nav>
         <ul>
-            <li><a href="${pageContext.request.contextPath}">Home</a></li>
+            <li><a href="${pageContext.request.contextPath}"><fmt:message key="main_page" /></a></li>
+        </ul>
+        <ul>
+            <form method="get" style="display:inline;">
+                <select name="lang" onchange="this.form.submit()">
+                    <option value="en" <c:if test="${sessionScope.userLocale.language == 'en'}">selected</c:if>>Eng</option>
+                    <option value="be" <c:if test="${sessionScope.userLocale.language == 'be'}">selected</c:if>>Бел</option>
+                </select>
+            </form>
         </ul>
         <ul>
             <c:if test="${sessionScope.is_active == false || sessionScope.is_active == null}">

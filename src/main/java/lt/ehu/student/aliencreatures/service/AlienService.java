@@ -11,5 +11,6 @@ public interface AlienService {
     boolean addNewCharacter(Alien alien) throws ServiceException;
     boolean checkDuplicate(String name, String lor) throws ServiceException;
     List<Alien> fetchListOfCharacters() throws ServiceException;
-    PaginatedResult<Alien> fetchAliensForPage(int currentPage, int pageSize) throws ServiceException;
+    PaginatedResult<Alien> fetchAliensForPage(String currentPage, String pageSize) throws ServiceException;
+    boolean deleteAlien(Alien alien) throws ServiceException;
 }

@@ -11,7 +11,6 @@ public class SessionFactory {
         return Session.getDefaultInstance(configProperties,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        System.out.println(userPassword);
                         return new PasswordAuthentication(userName, userPassword);
                     }
                 });

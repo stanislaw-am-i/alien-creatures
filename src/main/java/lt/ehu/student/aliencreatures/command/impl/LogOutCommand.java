@@ -8,7 +8,6 @@ import lt.ehu.student.aliencreatures.command.Router;
 public class LogOutCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
-        System.out.println("LOGOUT COMMAND");
         request.getSession().invalidate();
         return new Router();
     }

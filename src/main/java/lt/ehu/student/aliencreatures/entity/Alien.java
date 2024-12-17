@@ -7,6 +7,7 @@ public class Alien extends AbstractEntity {
     private String lor;
     private byte[] image;
     private String base64Image;
+    private int userId;
 
     public String getBase64Image() {
         return base64Image;
@@ -45,5 +46,13 @@ public class Alien extends AbstractEntity {
         if (image != null) {
             this.base64Image = Base64.getEncoder().encodeToString(image);
         }
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }
