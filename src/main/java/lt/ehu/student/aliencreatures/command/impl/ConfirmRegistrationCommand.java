@@ -2,8 +2,9 @@ package lt.ehu.student.aliencreatures.command.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lt.ehu.student.aliencreatures.command.Command;
-import lt.ehu.student.aliencreatures.command.CommandConstant;
 import lt.ehu.student.aliencreatures.command.Router;
+import lt.ehu.student.aliencreatures.controller.PagePath;
+import lt.ehu.student.aliencreatures.controller.Parameter;
 import lt.ehu.student.aliencreatures.exception.CommandException;
 import lt.ehu.student.aliencreatures.exception.ServiceException;
 import lt.ehu.student.aliencreatures.service.UserService;
@@ -14,17 +15,17 @@ public class ConfirmRegistrationCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(CommandConstant.CONFIRM_REGISTRATION_PAGE);
+        Router router = new Router(PagePath.CONFIRM_REGISTRATION_PAGE);
         try {
-            String code = request.getParameter(CommandConstant.CODE_PARAM);
+            String code = request.getParameter(Parameter.CODE_PARAM);
             boolean isActivated = userService.activateRegistration(code);
             if (isActivated) {
-                request.setAttribute(CommandConstant.ATTR_CONFIRM_REG_SUCCESS_MESSAGE, CommandConstant.CONFIRM_REG_SUCCESS_MESSAGE);
+                request.setAttribute(Parameter.ATTR_CONFIRM_REG_SUCCESS_MESSAGE, Parameter.CONFIRM_REG_SUCCESS_MESSAGE);
             } else {
-                request.setAttribute(CommandConstant.ATTR_CONFIRM_REG_ERROR_MESSAGE, CommandConstant.CONFIRM_REG_ERROR_MESSAGE);
+                request.setAttribute(Parameter.ATTR_CONFIRM_REG_ERROR_MESSAGE, Parameter.CONFIRM_REG_ERROR_MESSAGE);
             }
         } catch (ServiceException e) {;
-            request.setAttribute(CommandConstant.ATTR_CONFIRM_REG_ERROR_MESSAGE, e.getMessage());
+            request.setAttribute(Parameter.ATTR_CONFIRM_REG_ERROR_MESSAGE, e.getMessage());
         }
 
         return router;

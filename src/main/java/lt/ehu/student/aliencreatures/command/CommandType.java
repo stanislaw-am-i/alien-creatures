@@ -9,6 +9,7 @@ public enum CommandType {
     DELETE_ALIEN(new DeleteAlienCommand()),
     SHOW_ALIEN(new ShowAlienCommand()),
     SIGN_UP(new SignUpCommand()),
+    CHANGE_PROFILE_DATA(new ChangeProfileDataCommand()),
     CONFIRM_REGISTRATION(new ConfirmRegistrationCommand()),
     RESEND_CONFIRMATION_MAIL(new ResendConfirmationMailCommand()),
     DEFAULT(new DefaultCommand());
@@ -24,7 +25,6 @@ public enum CommandType {
     }
 
     public static Command defineCommand(String commandStr) {
-        // todo: via stream and add exception handler probably
         if (commandStr == null || commandStr.isBlank()) {
             return CommandType.DEFAULT.getCommand();
         }

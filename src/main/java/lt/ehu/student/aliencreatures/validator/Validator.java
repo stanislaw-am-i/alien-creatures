@@ -36,12 +36,4 @@ public interface Validator {
      * @return true if the username is valid, false otherwise
      */
     boolean validateUsername(String username);
-
-    /**
-     * Checks if a string is not empty (non-null and non-blank).
-     *
-     * @param value the string to check
-     * @return true if the string is non-null and non-empty, false otherwise
-     */
-    boolean validateNotEmpty(String value);
 }

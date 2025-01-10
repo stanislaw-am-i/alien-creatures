@@ -11,4 +11,5 @@ public interface UserDao {
     Optional<User> findByUsername(String login) throws DaoException;
     Optional<User> findByEmail(String email) throws DaoException;
     Optional<User> findByConformationCode(String code) throws DaoException;
+    boolean findByLoginExcludingId(int userId, String userName, String email) throws DaoException;
 }

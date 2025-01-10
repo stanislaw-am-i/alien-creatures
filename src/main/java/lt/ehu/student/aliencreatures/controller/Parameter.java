@@ -1,17 +1,6 @@
-package lt.ehu.student.aliencreatures.command;
+package lt.ehu.student.aliencreatures.controller;
 
-public class CommandConstant {
-
-    // JSP Page paths
-    public static final String ALIENS_PAGE = "jsp/aliens.jsp";
-    public static final String MAIN_PAGE = "jsp/main.jsp";
-    public static final String LOGIN_PAGE = "jsp/login.jsp";
-    public static final String INDEX_PAGE = "index.jsp";
-    public static final String SIGNUP_PAGE = "jsp/signup.jsp";
-    public static final String NOTIFICATION_PAGE = "jsp/notification.jsp";
-    public static final String CONFIRM_REGISTRATION_PAGE = "jsp/confirm_registration.jsp";
-    public static final String ADD_ALIEN_PAGE = "jsp/add_alien.jsp";
-
+public final class Parameter {
     // Error messages
     public static final String ERROR_INVALID_PARAMS = "Provided params are not valid";
     public static final String ERROR_DUPLICATE_ALIEN = "This alien has already been added";
@@ -48,5 +37,28 @@ public class CommandConstant {
     // Command exception
     public static final String FAILED_TO_LOGIN_EXP = "Failed to login";
 
-    private CommandConstant() {}
+    // Error pages
+    public static final String ERROR_500_PAGE = "jsp/error/error_500.jsp";
+
+    // Error attributes
+    public static final String ATTR_ERR_MESSAGE = "error_msg";
+
+    // Request parameters
+    public static final String COMMAND_PARAM = "command";
+
+    // Content types
+    public static final String CONTENT_TYPE_HTML = "text/html";
+
+    public static final String INVALID_USERNAME_EXP = "Invalid username.";
+    public static final String INVALID_EMAIL_FORMAT_EXP = "Invalid email format.";
+    public static final String INVALID_PASSWORD_EXP = "Password must be at least 8 characters long.";
+    public static final String USER_ALREADY_EXISTS_EXP = "User Already Exists.";
+    public static final String FIND_USER_BY_USERNAME_FAILED_EXP = "Failed to find user by username.";
+    public static final String FIND_USER_BY_EMAIL_FAILED_EXP = "Failed to find user by email.";
+    public static final String SAVE_USER_FAILED_EXP = "Failed to save new user.";
+
+    // Other
+    public static final String CONFIRM_REGISTRATION_URL = "?command=CONFIRM_REGISTRATION&code=";
+
+    private Parameter() {}
 }

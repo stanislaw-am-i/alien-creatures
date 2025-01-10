@@ -1,6 +1,6 @@
 package lt.ehu.student.aliencreatures.pool;
 
-import lt.ehu.student.aliencreatures.util.PropertyUtil;
+import lt.ehu.student.aliencreatures.util.PropertyLoaderUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +22,6 @@ public class ConnectionPool {
     private static final String DB_URL_PROPERTY_NAME = "db.url";
     private static final String DB_USER_PROPERTY_NAME = "db.user";
     private static final String DB_PASSWORD_PROPERTY_NAME = "db.password";
-    // todo: AtomicBoolean
 
     private BlockingQueue<ProxyConnection> free = new LinkedBlockingQueue<>(DEFAULT_POOL_SIZE);
     private BlockingQueue<ProxyConnection> used = new LinkedBlockingQueue<>(DEFAULT_POOL_SIZE);
@@ -32,21 +31,18 @@ public class ConnectionPool {
         try {
             DriverManager.registerDriver(new org.postgresql.Driver());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            LOGGER.error(e);
         }
     }
 
     private ConnectionPool() throws SQLException, IOException {
-        DriverManager.registerDriver(new org.postgresql.Driver());
-
-        Properties prop = PropertyUtil.loadProperties(PROPERTIES);
+        Properties prop = PropertyLoaderUtil.loadProperties(PROPERTIES);
 
         String url = (String) prop.get(DB_URL_PROPERTY_NAME);
         String user = prop.getProperty(DB_USER_PROPERTY_NAME);
         String password = prop.getProperty(DB_PASSWORD_PROPERTY_NAME);
 
-        // todo: As Stream
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
             Connection connection = DriverManager.getConnection(url, user, password);
             free.add(new ProxyConnection(connection));
         }
@@ -61,10 +57,9 @@ public class ConnectionPool {
                 if (instance == null) {
                     instance = new ConnectionPool();
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            } catch (IOException | SQLException e) {
+                LOGGER.error(e);
+                throw new ExceptionInInitializerError(e);
             } finally {
                 INSTANCE_LOCK.unlock();
             }
@@ -79,7 +74,8 @@ public class ConnectionPool {
             used.offer(connection);
             return connection;
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            LOGGER.error(e);
+            Thread.currentThread().interrupt();
         } finally {
             lock.unlock();
         }
@@ -87,7 +83,7 @@ public class ConnectionPool {
 
     public boolean releaseConnection(Connection connection) {
         if (!(connection instanceof ProxyConnection)) {
-            LOGGER.warn("Connection is not a ProxyConnection."); // todo: debug or error?
+            LOGGER.warn("Connection is not a ProxyConnection.");
             return false;
         }
 
@@ -116,9 +112,8 @@ public class ConnectionPool {
                 free.take().reallyClose();
             }
             deregisterDrivers();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | SQLException e) {
+            LOGGER.error(e);
             throw new RuntimeException(e);
         } finally {
             lock.unlock();
@@ -130,6 +125,7 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
+                LOGGER.error(e);
                 throw new RuntimeException(e);
             }
         });

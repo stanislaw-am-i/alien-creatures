@@ -35,8 +35,4 @@ public class ValidatorImpl implements Validator {
         return username != null && USERNAME_PATTERN.matcher(username).matches();
     }
 
-    @Override
-    public boolean validateNotEmpty(String value) {
-        return value != null && !value.trim().isEmpty();
-    }
 }

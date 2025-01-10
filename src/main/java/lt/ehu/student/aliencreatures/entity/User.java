@@ -1,10 +1,11 @@
 package lt.ehu.student.aliencreatures.entity;
 
+import java.util.Objects;
+
 public class User extends AbstractEntity {
     private String username;
     private String email;
     private String password;
-    private Boolean isActive;
     private String confirmationCode;
     private Role role;
     private Status status;
@@ -41,14 +42,6 @@ public class User extends AbstractEntity {
         this.email = email;
     }
 
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
     public String getConfirmationCode() {
         return confirmationCode;
     }
@@ -71,5 +64,18 @@ public class User extends AbstractEntity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(confirmationCode, user.confirmationCode) && role == user.role && status == user.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, email, password, confirmationCode, role, status);
     }
 }

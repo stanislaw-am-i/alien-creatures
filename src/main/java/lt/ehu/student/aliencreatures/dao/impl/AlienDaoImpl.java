@@ -31,44 +31,47 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
 
     @Override
     public boolean insert(Alien alien) throws DaoException {
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPool.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(ADD_CHARACTER_QUERY);
             statement.setString(1, alien.getName());
             statement.setString(2, alien.getLor());
             statement.setBytes(3, alien.getImage());
             statement.setInt(4, alien.getUserId());
             int rowsAffected = statement.executeUpdate();
-            ConnectionPool.getInstance().releaseConnection(connection);
             return rowsAffected == 1;
         } catch (SQLException e) {
             LOGGER.error("Failed to insert alien.", e);
             throw new DaoException(e);
+        } finally {
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
     @Override
     public boolean delete(Alien alien) throws DaoException {
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPool.getInstance().getConnection();
-            try (PreparedStatement statement = connection.prepareStatement(DELETE_ALIEN_QUERY)) {
-                statement.setLong(1, alien.getId());
-                int rowsAffected = statement.executeUpdate();
-                return rowsAffected == 1;
-            } finally {
-                ConnectionPool.getInstance().releaseConnection(connection);
-            }
+            connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_ALIEN_QUERY)
+            statement.setLong(1, alien.getId());
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected == 1;
         } catch (SQLException e) {
             LOGGER.error("Failed to delete alien with id {}", alien.getId(), e);
             throw new DaoException("Failed to delete alien", e);
+        } finally {
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
     @Override
     public List<Alien> findAll() throws DaoException {
         List<Alien> aliens = new ArrayList<>();
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPool.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(FIND_ALL_QUERY);
 
@@ -82,11 +85,12 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
                 aliens.add(alien);
             }
 
-            ConnectionPool.getInstance().releaseConnection(connection);
             return aliens;
         } catch (SQLException e) {
             LOGGER.error("Failed to fetch the list of aliens records.", e);
             throw new DaoException(e);
+        } finally {
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
@@ -97,26 +101,29 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
 
     @Override
     public boolean checkDuplicate(Alien alien) throws DaoException {
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPool.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(CHECK_DUPLICATE_QUERY);
             statement.setString(1, alien.getName());
             statement.setString(2, alien.getLor());
             ResultSet result = statement.executeQuery();
 
-            ConnectionPool.getInstance().releaseConnection(connection);
             return result.next() && result.getInt(1) > 0;
         } catch (SQLException e) {
             LOGGER.error("Failed to select a record from DB.", e);
             throw new DaoException(e);
+        } finally {
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
     @Override
     public List<Alien> fetchAliens(int limit, int offset) throws DaoException {
         List<Alien> aliens = new ArrayList<>();
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPool.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(FETCH_ALIENS_QUERY);
             statement.setInt(1, limit);
             statement.setInt(2, offset);
@@ -131,24 +138,23 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
                 alien.setUserId(result.getInt("user_id"));
                 aliens.add(alien);
             }
-
-            ConnectionPool.getInstance().releaseConnection(connection);
             return aliens;
         } catch (SQLException e) {
             LOGGER.error("Failed to fetch the list of aliens records.", e);
             throw new DaoException(e);
+        } finally {
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
     @Override
     public int countAliens() throws DaoException {
-        // todo: create finally block
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPool.getInstance().getConnection();
+            connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(COUNT_ALIENS);
             ResultSet result = statement.executeQuery();
 
-            ConnectionPool.getInstance().releaseConnection(connection);
             if (result.next()) {
                 return result.getInt(1);
             } else {
@@ -157,6 +163,8 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
         } catch (SQLException e) {
             LOGGER.error("Failed to select a record from DB.", e);
             throw new DaoException(e);
+        } finally {
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 

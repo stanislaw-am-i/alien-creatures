@@ -3,8 +3,9 @@ package lt.ehu.student.aliencreatures.command.impl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lt.ehu.student.aliencreatures.command.Command;
-import lt.ehu.student.aliencreatures.command.CommandConstant;
 import lt.ehu.student.aliencreatures.command.Router;
+import lt.ehu.student.aliencreatures.controller.PagePath;
+import lt.ehu.student.aliencreatures.controller.Parameter;
 import lt.ehu.student.aliencreatures.entity.Alien;
 import lt.ehu.student.aliencreatures.entity.User;
 import lt.ehu.student.aliencreatures.exception.CommandException;
@@ -23,8 +24,8 @@ public class LoginCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String login = request.getParameter(CommandConstant.LOGIN_PARAM);
-        String password = request.getParameter(CommandConstant.PASSWORD_PARAM);
+        String login = request.getParameter(Parameter.LOGIN_PARAM);
+        String password = request.getParameter(Parameter.PASSWORD_PARAM);
         String page;
         HttpSession session = request.getSession();
         try {
@@ -36,42 +37,42 @@ public class LoginCommand implements Command {
                 session.setAttribute("userRole", user.getRole().toString());
                 switch (user.getStatus()) {
                     case ACTIVE:
-                        request.setAttribute(CommandConstant.ATTR_USER, user.getUsername());
-                        session.setAttribute(CommandConstant.ATTR_USER_NAME, user.getUsername());
-                        session.setAttribute(CommandConstant.ATTR_USER_IS_ACTIVE, true);
+                        request.setAttribute(Parameter.ATTR_USER, user.getUsername());
+                        session.setAttribute(Parameter.ATTR_USER_NAME, user.getUsername());
+                        session.setAttribute(Parameter.ATTR_USER_IS_ACTIVE, true);
+                        session.setAttribute("email", user.getEmail());
+                        session.setAttribute("userId", user.getId());
 
                         String pageParam = request.getParameter("page");
                         String pageSizeParam = request.getParameter("pageSize");
 
                         PaginatedResult<Alien> paginatedResult = alienService.fetchAliensForPage(pageParam, pageSizeParam);
-                        request.setAttribute(CommandConstant.ATTR_ALIENS_LIST, paginatedResult.getItems());
-                        page = CommandConstant.MAIN_PAGE;
+                        request.setAttribute(Parameter.ATTR_ALIENS_LIST, paginatedResult.getItems());
+                        page = PagePath.MAIN_PAGE;
                         break;
                     case INACTIVE:
-                        session.setAttribute(CommandConstant.ATTR_USER_NAME, user.getUsername());
-                        session.setAttribute(CommandConstant.ATTR_USER_EMAIL, user.getEmail());
-                        session.setAttribute(CommandConstant.ATTR_USER_IS_ACTIVE, false);
+                        session.setAttribute(Parameter.ATTR_USER_NAME, user.getUsername());
+                        session.setAttribute(Parameter.ATTR_USER_EMAIL, user.getEmail());
+                        session.setAttribute(Parameter.ATTR_USER_IS_ACTIVE, false);
                         request.setAttribute("unconfirmedRegistration", true);
-                        page = CommandConstant.NOTIFICATION_PAGE;
+                        page = PagePath.NOTIFICATION_PAGE;
                         break;
                     case BANNED:
                         request.setAttribute("userBanned", true);
-                        session.setAttribute(CommandConstant.ATTR_USER_IS_ACTIVE, false);
-                        page = CommandConstant.NOTIFICATION_PAGE;
+                        session.setAttribute(Parameter.ATTR_USER_IS_ACTIVE, false);
+                        page = PagePath.NOTIFICATION_PAGE;
                         break;
                     default:
-                        page = CommandConstant.MAIN_PAGE;
+                        page = PagePath.MAIN_PAGE;
                 }
-                // todo: get aliens
-                //page = CommandConstant.MAIN_PAGE;
             } else {
-                request.setAttribute(CommandConstant.ATTR_ERROR_LOGIN_PASS_MESSAGE, CommandConstant.ERROR_LOGIN_INCORRECT);
-                page = CommandConstant.LOGIN_PAGE;
+                request.setAttribute(Parameter.ATTR_ERROR_LOGIN_PASS_MESSAGE, Parameter.ERROR_LOGIN_INCORRECT);
+                page = PagePath.LOGIN_PAGE;
             }
-            session.setAttribute(CommandConstant.ATTR_CURRENT_PAGE, page);
+            session.setAttribute(Parameter.ATTR_CURRENT_PAGE, page);
             return new Router(page);
         } catch (ServiceException e) {
-            throw new CommandException(CommandConstant.FAILED_TO_LOGIN_EXP, e);
+            throw new CommandException(Parameter.FAILED_TO_LOGIN_EXP, e);
         }
     }
 }

@@ -1,6 +1,8 @@
 package lt.ehu.student.aliencreatures.entity;
 
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Objects;
 
 public class Alien extends AbstractEntity {
     private String name;
@@ -54,5 +56,18 @@ public class Alien extends AbstractEntity {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Alien)) return false;
+        Alien alien = (Alien) o;
+        return userId == alien.userId && Objects.equals(name, alien.name) && Objects.equals(lor, alien.lor) && Objects.deepEquals(image, alien.image) && Objects.equals(base64Image, alien.base64Image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, lor, Arrays.hashCode(image), base64Image, userId);
     }
 }

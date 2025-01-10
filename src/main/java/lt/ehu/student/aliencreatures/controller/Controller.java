@@ -15,9 +15,9 @@ import org.apache.logging.log4j.Logger;
 
 @WebServlet(name = "alienCreaturesServlet", value = {"/controller", "*.do"})
 @MultipartConfig(
-        fileSizeThreshold = 1024 * 1024 * 2, // Files larger than 2MB will be written to disk.
-        maxFileSize = 1024 * 1024 * 10,      // 10MB is maximum size of an individual uploaded file.
-        maxRequestSize = 1024 * 1024 * 50    // 50MB is maximum size of the entire request, including all files and form data.
+        fileSizeThreshold = 1024 * 1024 * 2,
+        maxFileSize = 1024 * 1024 * 10,
+        maxRequestSize = 1024 * 1024 * 50
 )
 public class Controller extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(Controller.class);
@@ -42,9 +42,7 @@ public class Controller extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType(ControllerConstant.CONTENT_TYPE_HTML);
-        resp.setCharacterEncoding("UTF-8"); // todo: const
-        String commandStr = req.getParameter(ControllerConstant.COMMAND_PARAM);
+        String commandStr = req.getParameter(Parameter.COMMAND_PARAM);
         LOGGER.debug("The Command {} is processed.", commandStr);
         Command command = CommandType.defineCommand(commandStr);
         try {
@@ -55,8 +53,8 @@ public class Controller extends HttpServlet {
                 req.getRequestDispatcher(router.getPage()).forward(req, resp);
             }
         } catch (CommandException e) {
-            req.setAttribute(ControllerConstant.ATTR_ERROR_MESSAGE, e.getCause());
-            req.getRequestDispatcher(ControllerConstant.ERROR_500_PAGE).forward(req, resp);
+            req.setAttribute(Parameter.ATTR_ERR_MESSAGE, e.getCause());
+            req.getRequestDispatcher(Parameter.ERROR_500_PAGE).forward(req, resp);
         }
     }
 
