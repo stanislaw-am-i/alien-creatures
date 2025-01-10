@@ -43,6 +43,7 @@ public final class Parameter {
     public static final String USER_ID_PARAM = "userId";
     public static final String EMAIL_PARAM = "email";
     public static final String CODE_PARAM = "code";
+    public static final String ENCODING_UTF_8_PARAM = "UTF-8";
 
     public static final String FAILED_TO_LOGIN_EXP = "Failed to login";
 

@@ -17,7 +17,7 @@ public class ConnectionPool {
     private static ConnectionPool instance;
     private static final Logger LOGGER = LogManager.getLogger(ConnectionPool.class);
     private static final int DEFAULT_POOL_SIZE = 8;
-    private static final ReentrantLock INSTANCE_LOCK = new ReentrantLock();
+    private static final ReentrantLock instance_lock = new ReentrantLock();
     public static final String PROPERTIES = "properties/database.properties";
     private static final String DB_URL_PROPERTY_NAME = "db.url";
     private static final String DB_USER_PROPERTY_NAME = "db.user";
@@ -53,7 +53,7 @@ public class ConnectionPool {
     public static ConnectionPool getInstance() {
         if (instance == null) {
             try {
-                INSTANCE_LOCK.lock();
+                instance_lock.lock();
                 if (instance == null) {
                     instance = new ConnectionPool();
                 }
@@ -61,7 +61,7 @@ public class ConnectionPool {
                 LOGGER.error(e);
                 throw new ExceptionInInitializerError(e);
             } finally {
-                INSTANCE_LOCK.unlock();
+                instance_lock.unlock();
             }
         }
         return instance;

@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-/* chainresponsobility pattern */
 @WebFilter(filterName = "EncodingAndContentTypeFilter", urlPatterns = "/*")
 public class EncodingAndContentTypeFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger(EncodingAndContentTypeFilter.class);
@@ -17,8 +16,9 @@ public class EncodingAndContentTypeFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         response.setContentType(Parameter.CONTENT_TYPE_HTML);
-        response.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding(Parameter.ENCODING_UTF_8_PARAM);
         chain.doFilter(request, response);
+        LOGGER.debug("Provided content type and encoding.");
     }
 
     public void destroy() {}
