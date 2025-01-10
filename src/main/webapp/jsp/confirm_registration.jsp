@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Confirmation</title>
-    <!-- Pico CSS Minimal Framework -->
     <link href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" rel="stylesheet">
     <style>
         .message-container {
@@ -46,13 +45,10 @@
             </div>
 
             <div class="toast-banner ${!empty confirmationMessage ? 'show-toast' : ''}">
-                <!-- Message displayed to the user -->
                 ${confirmationMessage}
             </div>
 
             <p>Thank you for registering! A confirmation email has been sent to your email address. Please check your inbox and click the confirmation link to activate your account.</p>
-
-            <p>If you didn’t receive the email, please check your spam folder or <a href="${pageContext.request.contextPath}/resendConfirmation">click here to resend the confirmation email</a>.</p>
 
             <p><a href="${pageContext.request.contextPath}/jsp/login.jsp" class="contrast">Back to Login</a></p>
         </div>

@@ -24,14 +24,14 @@ public class SignUpCommand implements Command {
 
         try {
             Map<String, String> params = new HashMap<>();
-            params.put("login", login);
+            params.put("username", login);
             params.put("email", email);
             params.put("password", password);
             if (userService.signUp(params)) {
                 String instanceUrl = request.getRequestURL().toString();
                 userService.sendEmailToVerifyUser(login, email, instanceUrl);
                 request.setAttribute(Parameter.ATTR_USER, login);
-                page = "jsp/confirm_registration.jsp";
+                page = PagePath.CONFIRM_REGISTRATION_PAGE;
             }
             if (params.containsKey("error")) {
                 request.setAttribute(Parameter.ERROR_REGISTRATION_MESSAGE, params.get("error"));

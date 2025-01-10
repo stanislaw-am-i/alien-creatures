@@ -24,16 +24,16 @@ public class ShowAlienCommand implements Command {
         String page = PagePath.MAIN_PAGE;
         Router router = new Router();
         try {
-            String pageParam = request.getParameter("page");
-            String pageSizeParam = request.getParameter("pageSize");
+            String pageParam = request.getParameter(Parameter.ATTR_PAGE);
+            String pageSizeParam = request.getParameter(Parameter.ATTR_PAGE_SIZE);
 
             PaginatedResult<Alien> paginatedResult = alienService.fetchAliensForPage(pageParam, pageSizeParam);
 
-            request.setAttribute("currentPage", paginatedResult.getCurrentPage());
-            request.setAttribute("pageSize", paginatedResult.getPageSize());
-            request.setAttribute("totalPages", paginatedResult.getTotalPages());
+            request.setAttribute(Parameter.ATTR_CURRENT_PAGE_NUMBER, paginatedResult.getCurrentPage());
+            request.setAttribute(Parameter.ATTR_PAGE_SIZE, paginatedResult.getPageSize());
+            request.setAttribute(Parameter.ATTR_TOTAL_PAGES, paginatedResult.getTotalPages());
             request.setAttribute(Parameter.ATTR_ALIENS_LIST, paginatedResult.getItems());
-            request.setAttribute("command", "SHOW_ALIEN");
+            request.setAttribute(Parameter.COMMAND_PARAM, "SHOW_ALIEN");
 
             router.setPage(page);
             return router;

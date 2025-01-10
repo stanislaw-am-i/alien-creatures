@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Page</title>
-    <!-- Pico CSS Minimal Framework -->
     <link href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" rel="stylesheet">
     <style>
         .form-container {

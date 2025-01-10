@@ -6,7 +6,6 @@ import java.util.Properties;
 
 public class PropertyLoaderUtil {
 
-    // todo: rename to PropertyLoader
     public static Properties loadProperties(String filePath) throws IOException {
         Properties properties = new Properties();
 

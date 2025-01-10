@@ -1,12 +1,9 @@
 package lt.ehu.student.aliencreatures.command;
 
-/**
- *
- *  The redirect is protection from F5
- *
- * */
+import lt.ehu.student.aliencreatures.controller.PagePath;
+
 public class Router {
-    private String page = CommandConstant.INDEX_PAGE;
+    private String page = PagePath.INDEX_PAGE;
     private Type type = Type.FORWARD;
 
     enum Type {

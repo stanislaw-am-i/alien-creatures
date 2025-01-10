@@ -23,7 +23,7 @@ public class ResendConfirmationMailCommand implements Command {
         String instanceUrl = request.getRequestURL().toString();
         try {
             userService.sendEmailToVerifyUser(login, email, instanceUrl);
-            request.setAttribute("unconfirmedRegistrationResend", true);
+            request.setAttribute(Parameter.ATTR_NOT_CONFIRM_REG_RESEND, true);
             return new Router(page);
         } catch (ServiceException e) {
             throw new CommandException(e);

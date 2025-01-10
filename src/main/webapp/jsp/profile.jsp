@@ -10,7 +10,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
-    <!-- Pico CSS Minimal Framework -->
     <link href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css" rel="stylesheet">
     <style>
         .form-container {
@@ -61,7 +60,7 @@
 
             <c:if test="${isSuccessMessage == true}">
                 <div class="success-message">
-                    <fmt:message key="delete_alien" />
+                    <fmt:message key="change_profile" />
                 </div>
             </c:if>
 

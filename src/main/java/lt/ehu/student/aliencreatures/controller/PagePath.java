@@ -9,6 +9,7 @@ public final class PagePath {
     public static final String NOTIFICATION_PAGE = "jsp/notification.jsp";
     public static final String CONFIRM_REGISTRATION_PAGE = "jsp/confirm_registration.jsp";
     public static final String ADD_ALIEN_PAGE = "jsp/add_alien.jsp";
+    public static final String PROFILE_PAGE = "jsp/profile.jsp";
     public static final String ERROR_500_PAGE = "jsp/error/error_500.jsp";
 
     private PagePath() {}

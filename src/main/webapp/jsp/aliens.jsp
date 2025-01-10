@@ -13,7 +13,6 @@
         <jsp:include page="header.jsp"/>
     </header>
 
-    <!-- Alien List Section -->
     <section>
         <h2>Alien Creatures</h2>
         <ul>

@@ -32,8 +32,8 @@ public class AddAlienCommand implements Command {
             String lor = request.getParameter(Parameter.LOR_PARAM);
 
             HttpSession session = request.getSession();
-            Integer userId = (session != null && session.getAttribute("currentUserId") != null)
-                    ? (Integer) session.getAttribute("currentUserId")
+            Integer userId = (session != null && session.getAttribute(Parameter.ATTR_CURRENT_USER_ID) != null)
+                    ? (Integer) session.getAttribute(Parameter.ATTR_CURRENT_USER_ID)
                     : null;
 
             Part imagePart = request.getPart("file");

@@ -54,7 +54,7 @@ public class AlienDaoImpl extends BaseDao<Alien> implements AlienDao {
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(DELETE_ALIEN_QUERY)
+            PreparedStatement statement = connection.prepareStatement(DELETE_ALIEN_QUERY);
             statement.setLong(1, alien.getId());
             int rowsAffected = statement.executeUpdate();
             return rowsAffected == 1;

@@ -32,21 +32,21 @@ public class LoginCommand implements Command {
             if (userService.authenticate(login, password)) {
                 Optional<User> optionalUser = userService.findByUsername(login);
                 User user = optionalUser.get();
-                // todo: method to set session attributes
-                session.setAttribute("currentUserId", user.getId());
-                session.setAttribute("userRole", user.getRole().toString());
+
+                session.setAttribute(Parameter.ATTR_CURRENT_USER_ID, user.getId());
+                session.setAttribute(Parameter.ATTR_USER_ROLE, user.getRole().toString());
+                request.setAttribute(Parameter.COMMAND_PARAM, "SHOW_ALIEN");
+                request.setAttribute(Parameter.ATTR_PAGE, "1");
+                request.setAttribute(Parameter.ATTR_CURRENT_PAGE_NUMBER, "1");
+                request.setAttribute(Parameter.ATTR_PAGE_SIZE, "5");
                 switch (user.getStatus()) {
                     case ACTIVE:
                         request.setAttribute(Parameter.ATTR_USER, user.getUsername());
                         session.setAttribute(Parameter.ATTR_USER_NAME, user.getUsername());
                         session.setAttribute(Parameter.ATTR_USER_IS_ACTIVE, true);
-                        session.setAttribute("email", user.getEmail());
-                        session.setAttribute("userId", user.getId());
-
-                        String pageParam = request.getParameter("page");
-                        String pageSizeParam = request.getParameter("pageSize");
-
-                        PaginatedResult<Alien> paginatedResult = alienService.fetchAliensForPage(pageParam, pageSizeParam);
+                        session.setAttribute(Parameter.EMAIL_PARAM, user.getEmail());
+                        session.setAttribute(Parameter.USER_ID_PARAM, user.getId());
+                        PaginatedResult<Alien> paginatedResult = alienService.fetchAliensForPage("1", "5");
                         request.setAttribute(Parameter.ATTR_ALIENS_LIST, paginatedResult.getItems());
                         page = PagePath.MAIN_PAGE;
                         break;
@@ -54,11 +54,11 @@ public class LoginCommand implements Command {
                         session.setAttribute(Parameter.ATTR_USER_NAME, user.getUsername());
                         session.setAttribute(Parameter.ATTR_USER_EMAIL, user.getEmail());
                         session.setAttribute(Parameter.ATTR_USER_IS_ACTIVE, false);
-                        request.setAttribute("unconfirmedRegistration", true);
+                        request.setAttribute(Parameter.ATTR_NOT_CONFIRM_REG, true);
                         page = PagePath.NOTIFICATION_PAGE;
                         break;
                     case BANNED:
-                        request.setAttribute("userBanned", true);
+                        request.setAttribute(Parameter.ATTR_USER_BANNED, true);
                         session.setAttribute(Parameter.ATTR_USER_IS_ACTIVE, false);
                         page = PagePath.NOTIFICATION_PAGE;
                         break;

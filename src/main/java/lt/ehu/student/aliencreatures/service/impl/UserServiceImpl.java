@@ -119,7 +119,6 @@ public class UserServiceImpl implements UserService {
         }
 
         params.put("error", errorMessages.toString().trim());
-        System.out.println(params.get("error"));
         return false;
     }
 
@@ -233,8 +232,7 @@ public class UserServiceImpl implements UserService {
         try {
             return UserDaoImpl.getInstance().update(user);
         } catch (DaoException e) {
-            // todo: change exp msg
-            throw new ServiceException(Parameter.SAVE_USER_FAILED_EXP, e);
+            throw new ServiceException("Failed to update user", e);
         }
     }
 

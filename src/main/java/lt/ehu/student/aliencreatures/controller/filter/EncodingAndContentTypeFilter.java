@@ -2,6 +2,7 @@ package lt.ehu.student.aliencreatures.controller.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
+import lt.ehu.student.aliencreatures.controller.Parameter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +16,7 @@ public class EncodingAndContentTypeFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {}
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        response.setContentType(ControllerConstant.CONTENT_TYPE_HTML);
+        response.setContentType(Parameter.CONTENT_TYPE_HTML);
         response.setCharacterEncoding("UTF-8");
         chain.doFilter(request, response);
     }

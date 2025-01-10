@@ -69,8 +69,9 @@ public class ConnectionPool {
 
     public ProxyConnection getConnection() {
         lock.lock();
+        ProxyConnection connection = null;
         try {
-            ProxyConnection connection = free.take();
+            connection = free.take();
             used.offer(connection);
             return connection;
         } catch (InterruptedException e) {
@@ -79,6 +80,8 @@ public class ConnectionPool {
         } finally {
             lock.unlock();
         }
+
+        return connection;
     }
 
     public boolean releaseConnection(Connection connection) {

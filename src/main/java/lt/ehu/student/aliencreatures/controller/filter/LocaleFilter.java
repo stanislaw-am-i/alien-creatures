@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpSession;
 
 @WebFilter(filterName = "LocaleFilter", urlPatterns = "/*")
 public class LocaleFilter implements Filter {
-    // todo: LOGGER
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}
 

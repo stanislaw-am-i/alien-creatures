@@ -35,7 +35,7 @@
             background-color: #218838;
         }
         .error-banner {
-            background-color: #f44336; /* Red for error */
+            background-color: #f44336;
             color: white;
             padding: 20px;
             border-radius: 5px;
@@ -50,7 +50,7 @@
 <main class="container">
 
     <section>
-        <h2>Alien Creatures</h2>
+        <h2><fmt:message key="main_title" /></h2>
         <c:if test="${isSuccessMessage == true}">
             <div class="success-message">
                 <fmt:message key="delete_alien" />
@@ -58,16 +58,16 @@
         </c:if>
         <c:if test="${sessionScope.is_active == true}">
             <a class="add-btn" href="${pageContext.request.contextPath}/jsp/add_alien.jsp">
-                Add New Alien
+                <fmt:message key="add_new_alien_label" />
             </a>
         </c:if>
         <table>
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Lor</th>
-                <th>Image</th>
-                <th>Actions</th>
+                <th><fmt:message key="table_header_name" /></th>
+                <th><fmt:message key="table_header_lor" /></th>
+                <th><fmt:message key="table_header_image" /></th>
+                <th><fmt:message key="table_header_actions" /></th>
             </tr>
             </thead>
             <tbody>
@@ -84,7 +84,7 @@
                         <c:if test="${alien.userId == sessionScope.currentUserId || sessionScope.userRole == 'ADMIN' || sessionScope.userRole == 'MODER'}">
                             <a href="${pageContext.request.contextPath}/controller?command=DELETE_ALIEN&alienId=${alien.id}"
                                style="background-color: red; color: white; padding: 5px; text-decoration: none; border-radius: 3px;">
-                                Delete
+                                <fmt:message key="delete_label" />
                             </a>
                         </c:if>
                     </td>
@@ -95,16 +95,14 @@
 
         <nav>
             <ul class="pagination">
-                <!-- Previous Link -->
                 <c:if test="${currentPage > 1}">
                     <li>
                         <a href="${pageContext.request.contextPath}/controller?command=${command}&page=${currentPage - 1}&pageSize=${pageSize}">
-                            Previous
+                            <fmt:message key="previous_label" />
                         </a>
                     </li>
                 </c:if>
 
-                <!-- Page Links -->
                 <c:forEach begin="1" end="${totalPages}" var="page">
                     <li>
                         <a href="${pageContext.request.contextPath}/controller?command=${command}&page=${page}&pageSize=${pageSize}"
@@ -114,21 +112,19 @@
                     </li>
                 </c:forEach>
 
-                <!-- Next Link -->
                 <c:if test="${currentPage < totalPages}">
                     <li>
                         <a href="${pageContext.request.contextPath}/controller?command=${command}&page=${currentPage + 1}&pageSize=${pageSize}">
-                            Next
+                            <fmt:message key="next_label" />
                         </a>
                     </li>
                 </c:if>
 
-                <!-- Page Size Dropdown -->
                 <li>
                     <form method="GET" action="${pageContext.request.contextPath}/controller" style="display: inline;">
                         <input type="hidden" name="command" value="${command}" />
                         <input type="hidden" name="page" value="${currentPage}" />
-                        <label for="pageSize" style="margin-left: 10px;">Items per page:</label>
+                        <label for="pageSize" style="margin-left: 10px;"><fmt:message key="item_per_page_label" /></label>
                         <select name="pageSize" id="pageSize" onchange="this.form.submit()">
                             <option value="5" ${pageSize == 5 ? 'selected' : ''}>5</option>
                             <option value="10" ${pageSize == 10 ? 'selected' : ''}>10</option>

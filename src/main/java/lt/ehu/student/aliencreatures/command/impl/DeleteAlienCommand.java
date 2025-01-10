@@ -25,14 +25,14 @@ public class DeleteAlienCommand implements Command {
             Router router = new Router();
             router.setPage(page);
 
-            String alienId = request.getParameter("alienId");
+            String alienId = request.getParameter(Parameter.ATTR_ALIEN_ID);
             Alien alien = new Alien();
             alien.setId(Integer.valueOf(alienId));
             boolean isDeleted = alienService.deleteAlien(alien);
             request.setAttribute(Parameter.ATTR_SUCCESS_MESSAGE, isDeleted);
 
-            String pageParam = request.getParameter("page");
-            String pageSizeParam = request.getParameter("pageSize");
+            String pageParam = request.getParameter(Parameter.ATTR_PAGE);
+            String pageSizeParam = request.getParameter(Parameter.ATTR_PAGE_SIZE);
 
             PaginatedResult<Alien> paginatedResult = alienService.fetchAliensForPage(pageParam, pageSizeParam);
             request.setAttribute(Parameter.ATTR_ALIENS_LIST, paginatedResult.getItems());

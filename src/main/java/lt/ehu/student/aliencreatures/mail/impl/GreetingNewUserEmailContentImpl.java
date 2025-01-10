@@ -2,7 +2,6 @@ package lt.ehu.student.aliencreatures.mail.impl;
 
 import lt.ehu.student.aliencreatures.mail.EmailContent;
 
-// todo
 public class GreetingNewUserEmailContentImpl implements EmailContent {
     private final String userName;
     private final String instanceUrl;
